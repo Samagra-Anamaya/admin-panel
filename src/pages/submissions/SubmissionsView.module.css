@@ -1,0 +1,32 @@
+.formContainer {
+    display: flex;
+    padding: 1em;
+    flex-direction: row;
+    font-size: 1rem;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.subData {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 45%;
+}
+
+.subData>p:nth-child(1) {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.formData {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 45%;
+}
+
+.formData>p:nth-child(1) {
+    font-size: 1.5rem;
+    font-weight: 500;
+}

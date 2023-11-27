@@ -31,31 +31,12 @@ import {
     TextInput,
     TopToolbar,
     useTranslate,
+    useRedirect,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 
-import ResetViewsButton from './ResetViewsButton';
 export const PostIcon = BookIcon;
 
-const QuickFilter = ({
-    label,
-}: {
-    label?: string;
-    source?: string;
-    defaultValue?: any;
-}) => {
-    const translate = useTranslate();
-    return <Chip sx={{ marginBottom: 1 }} label={translate(label)} />;
-};
 
-const postFilter = [
-    <SearchInput source="q" alwaysOn />,
-    <TextInput source="title" defaultValue="Qui tempore rerum et voluptates" />,
-    <QuickFilter
-        label="resources.posts.fields.commentable"
-        source="commentable"
-        defaultValue
-    />,
-];
 
 const exporter = posts => {
     const data = posts.map(post => ({
@@ -69,25 +50,20 @@ const exporter = posts => {
 
 const PostListMobileActions = () => (
     <TopToolbar>
-        <FilterButton />
-        <CreateButton />
         <ExportButton />
     </TopToolbar>
 );
 
-const PostListMobile = () => (
+const GpsListMobile = () => (
     <InfiniteList
-        filters={postFilter}
-        sort={{ field: 'published_at', order: 'DESC' }}
+        // sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListMobileActions />}
     >
         <SimpleList
-            primaryText={record => record.title}
-            secondaryText={record => `${record.views} views`}
-            tertiaryText={record =>
-                new Date(record.published_at).toLocaleDateString()
-            }
+            primaryText={record => record.gpCode}
+            secondaryText={record => record.gpName}
+            tertiaryText={record => record.villagesUnderGp}
         />
     </InfiniteList>
 );
@@ -117,7 +93,6 @@ const PostListBulkActions = memo(
         ...props
     }) => (
         <Fragment>
-            <ResetViewsButton {...props} />
             <BulkDeleteButton {...props} />
             <BulkExportButton {...props} />
         </Fragment>
@@ -127,7 +102,6 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
-        <FilterButton />
         <CreateButton />
         <ExportButton />
     </TopToolbar>
@@ -137,23 +111,20 @@ const PostListActionToolbar = ({ children }) => (
     <Box sx={{ alignItems: 'center', display: 'flex' }}>{children}</Box>
 );
 
-const rowClick = (_id, _resource, record) => {
-    if (record.commentable) {
-        return 'edit';
-    }
 
-    return 'show';
-};
-
-const PostPanel = ({ record }) => (
-    <div dangerouslySetInnerHTML={{ __html: record.body }} />
-);
 
 const tagSort = { field: 'name.en', order: 'ASC' };
 
-const PostListDesktop = () => (
-    <List
-        filters={postFilter}
+const GpsListDesktop = () => {
+
+    const redirect = useRedirect();
+
+    const rowClick = (_id, _resource, record) => {
+        console.log("Click", record)
+        redirect("list", `villages?displayedFilters={}&filter={"gpCode":"${record.gpCode}"}`)
+    };
+
+    return <List
         sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListActions />}
@@ -161,56 +132,22 @@ const PostListDesktop = () => (
         <StyledDatagrid
             bulkActionButtons={<PostListBulkActions />}
             rowClick={rowClick}
-            expand={PostPanel}
             omit={['average_note']}
         >
-            <TextField source="id" />
-            <TextField source="title" cellClassName="title" />
-            <DateField
-                source="published_at"
-                sortByOrder="DESC"
-                cellClassName="publishedAt"
-            />
-            <ReferenceManyCount
-                label="resources.posts.fields.nb_comments"
-                reference="comments"
-                target="post_id"
-                link
-            />
-            <BooleanField
-                source="commentable"
-                label="resources.posts.fields.commentable_short"
-                sortable={false}
-            />
-            <NumberField source="views" sortByOrder="DESC" />
-            <ReferenceArrayField
-                label="Tags"
-                reference="tags"
-                source="tags"
-                sortBy="tags.name"
-                sort={tagSort}
-                cellClassName="hiddenOnSmallScreens"
-                headerClassName="hiddenOnSmallScreens"
-            >
-                <SingleFieldList sx={{ my: -2 }}>
-                    <ChipField source="name.en" size="small" />
-                </SingleFieldList>
-            </ReferenceArrayField>
-            <NumberField source="average_note" />
-            <PostListActionToolbar>
-                <EditButton />
-                <ShowButton />
-            </PostListActionToolbar>
+            <TextField source="gpCode" label="Gp Code" />
+            <TextField source="gpName" label="Gp Name" />
+            <TextField source="id" label="ID" />
+            <TextField source="villagesUnderGp" label="Villages Under GP" />
         </StyledDatagrid>
     </List>
-);
-
-const PostList = () => {
-    const isSmall = useMediaQuery<Theme>(
-        theme => theme.breakpoints.down('md'),
-        { noSsr: true }
-    );
-    return isSmall ? <PostListMobile /> : <PostListDesktop />;
 };
 
-export default PostList;
+const GpsList = () => {
+    const isSmall = useMediaQuery<Theme>(
+        theme => theme.breakpoints.down('sm'),
+        { noSsr: true }
+    );
+    return isSmall ? <GpsListMobile /> : <GpsListDesktop />;
+};
+
+export default GpsList;

@@ -1,0 +1,25 @@
+.feedbackContainer {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    width: 90vw;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+
+    .screenOne {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .divider {
+        height: 95%;
+        width: 2px;
+        background: rgba(14, 30, 37, 0.15);
+    }
+}

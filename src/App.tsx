@@ -14,7 +14,6 @@ export const App = () => (
   <Admin
     dataProvider={customDataProvider}
     authProvider={authProvider}
-    dashboard={Dashboard}
   >
     {/* <Resource name="submissions" list={EnumeratorList} show={EnumeratorDetails}/> */}
     <Resource name="gps" {...gps} />

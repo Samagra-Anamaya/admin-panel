@@ -37,7 +37,6 @@ import {
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { useLocation } from 'react-router-dom';
 import CommonModal from '../../components/Modal';
-import FeedbackFlow from '../../components/FeedbackFlow';
 export const PostIcon = BookIcon;
 
 
@@ -140,7 +139,6 @@ const GpsListDesktop = () => {
     >
         <StyledDatagrid
             bulkActionButtons={<PostListBulkActions />}
-        // rowClick={(_id, resource, record) => { setCurrentSubmission(record); setShowModal(true) }}
         >
             <TextField source="submitterId" label="Submitter ID" />
             <TextField source="status" label="Status" />
@@ -153,9 +151,6 @@ const GpsListDesktop = () => {
             <EditButton label='Start Feedback' icon={<></>} sx={{ background: '#2096f3', color: '#fff', padding: '0.3rem', fontWeight: 600, cursor: 'pointer' }} />
         </StyledDatagrid>
     </List >
-        {showModal && <CommonModal >
-            <FeedbackFlow {...{ currentSubmission }} />
-        </CommonModal>}
     </>
 };
 

@@ -1,0 +1,51 @@
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.mainContainer {
+
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 1rem;
+
+
+    .formContainer {
+        display: flex;
+        flex-direction: column;
+        width: 39%;
+        border: 1px solid #e8eef2;
+        border-radius: 0.5rem;
+        padding: 2rem;
+
+        &>h2 {
+            text-align: center;
+        }
+
+    }
+
+    .recordsContainer {
+        display: flex;
+        flex-direction: column;
+        width: 58%;
+        background: #f0f4f7;
+        border: 1px solid #e8eef2;
+        border-radius: 0.5rem;
+        padding: 2rem;
+
+        &>h2 {
+            text-align: center;
+        }
+
+    }
+
+    .iconStyle {
+        margin-top: 1rem;
+        cursor: pointer;
+    }
+}

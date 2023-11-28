@@ -123,5 +123,8 @@ export const customDataProvider = {
     // // For other resources, use the default implementation
     return dataProvider.getOne(resource, params);
   },
+  update: (resource: any, params: any) => {
+    console.log("Inside Update", resource, params)
+  }
   // ... You can override other methods similarly if needed
 };

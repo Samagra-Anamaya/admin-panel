@@ -102,18 +102,10 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
-        <CreateButton />
         <ExportButton />
     </TopToolbar>
 );
 
-const PostListActionToolbar = ({ children }) => (
-    <Box sx={{ alignItems: 'center', display: 'flex' }}>{children}</Box>
-);
-
-
-
-const tagSort = { field: 'name.en', order: 'ASC' };
 
 const GpsListDesktop = () => {
 
@@ -124,7 +116,7 @@ const GpsListDesktop = () => {
         redirect("list", `villages?displayedFilters={}&filter={"gpCode":"${record.gpCode}"}`)
     };
 
-    return <List
+    return <><List
         sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListActions />}
@@ -140,6 +132,17 @@ const GpsListDesktop = () => {
             <TextField source="villagesUnderGp" label="Villages Under GP" />
         </StyledDatagrid>
     </List>
+        <style>
+            {`
+            .MuiTablePagination-selectLabel {
+                margin-top: 1em;
+            }
+            .MuiTablePagination-displayedRows {
+                margin-top: 1rem;
+            }
+        `}
+        </style>
+    </>
 };
 
 const GpsList = () => {

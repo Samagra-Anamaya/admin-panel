@@ -103,7 +103,6 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
-        <CreateButton />
         <ExportButton />
     </TopToolbar>
 );
@@ -136,7 +135,7 @@ const GpsListDesktop = () => {
     };
 
 
-    return <List
+    return <><List
         filters={Filters}
         sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
@@ -169,6 +168,17 @@ const GpsListDesktop = () => {
             <TextField source="status" label="Status" />
         </StyledDatagrid>
     </List>
+        <style>
+            {`
+            .MuiTablePagination-selectLabel {
+                margin-top: 1em;
+            }
+            .MuiTablePagination-displayedRows {
+                margin-top: 1rem;
+            }
+        `}
+        </style>
+    </>
 };
 
 const VillagesList = () => {

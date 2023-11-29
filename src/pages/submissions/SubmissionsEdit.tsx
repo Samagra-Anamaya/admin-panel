@@ -1,23 +1,26 @@
 import * as React from "react";
 import { useEffect, useState, useRef } from 'react';
-import { Edit, SimpleForm, TextInput, DateInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, required, FunctionField, BooleanInput, useRecordContext, Button } from 'react-admin';
+import { Edit, SimpleForm, TextInput, DateInput, ReferenceManyField, Datagrid, TextField, DateField, EditButton, required, FunctionField, BooleanInput, useRecordContext, Button, useStore, useTheme } from 'react-admin';
 import styles from './SubmissionsEdit.module.scss';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { getImageFromMinio } from "../../utils/getImageFromMinio";
 import ImageViewer from 'react-simple-image-viewer';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import Icon from '@mui/material/Icon';
+import { ThemeName, themes } from "../../themes/themes";
 
 const SubmissionsEdit = () => {
     const [subData, setSubData] = React.useState<any>(null);
     const [feedbackState, setFeedbackState] = React.useState<any>({});
-
-    let fetchingLandImages = React.useRef(false);
-    let fetchingRorImages = useRef(false);
     const [landImages, setLandImages] = useState<any>([]);
     const [rorImages, setRorImages] = useState<any>([]);
     const [currentImage, setCurrentImage] = useState(0);
-    const [isViewerOpen, setIsViewerOpen] = useState(false);
+    const [landViewer, setLandViewer] = useState(false);
+    const [rorViewer, setRoRViewer] = useState(false);
+    const [theme, setTheme] = useTheme();
+    console.log({ theme })
+    let fetchingLandImages = React.useRef(false);
+    let fetchingRorImages = useRef(false);
 
     const getImages = async (arr: Array<string>, setterFunc: Function) => {
         if (arr[0].includes("https")) return;
@@ -44,14 +47,14 @@ const SubmissionsEdit = () => {
         }
     }, [rorImages])
 
-    const openImageViewer = React.useCallback((index: string | number) => {
+    const openImageViewer = React.useCallback((index: string | number, setter: Function) => {
         setCurrentImage(index);
-        setIsViewerOpen(true);
+        setter(true);
     }, []);
 
-    const closeImageViewer = () => {
+    const closeImageViewer = (setter: Function) => {
         setCurrentImage(0);
-        setIsViewerOpen(false);
+        setter(false);
     };
 
     const PlotInputs = () => {
@@ -234,22 +237,22 @@ const SubmissionsEdit = () => {
                     }} />
                     <TextInput required label="Overall Feedback" source={"feedbackData.feedback"} />
                 </div>
-                <div className={styles.recordsContainer}>
+                <div className={styles.recordsContainer} style={theme == 'dark' ? { background: 'none' } : {}}>
                     <h2>Image Records</h2>
                     <h3 style={{ opacity: 0.8, margin: '1rem 0rem' }}>Land Records</h3>
                     <div className={styles.imagePreviewContainer}>
                         {landImages.map((image: string, index: number) => (
                             <div className={styles.imageContainer}>
-                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index)} style={{ borderRadius: '0.5rem' }} />
+                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setLandViewer)} style={{ borderRadius: '0.5rem' }} />
                             </div>
                         ))}
-                        {isViewerOpen && (
+                        {landViewer && (
                             <ImageViewer
                                 src={landImages}
                                 currentIndex={currentImage}
                                 disableScroll={false}
                                 closeOnClickOutside={true}
-                                onClose={closeImageViewer}
+                                onClose={() => closeImageViewer(setLandViewer)}
                                 backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
                                 closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
                             />
@@ -259,16 +262,16 @@ const SubmissionsEdit = () => {
                     <div>
                         <div className={styles.imagePreviewContainer}>
                             {rorImages.map((image: string, index: number) => (
-                                <img src={image} alt="" width="100" onClick={() => openImageViewer(index)} />
+                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setRoRViewer)} style={{ borderRadius: '0.5rem' }} />
                             ))}
-                            {isViewerOpen && (
+                            {rorViewer && (
                                 <ImageViewer
                                     src={rorImages}
                                     currentIndex={currentImage}
                                     disableScroll={false}
                                     closeOnClickOutside={true}
-                                    onClose={closeImageViewer}
-                                    backgroundStyle={{ background: 'rgba(0,0,0,0.1)', }}
+                                    onClose={() => closeImageViewer(setRoRViewer)}
+                                    backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
                                     closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
                                 />
                             )}

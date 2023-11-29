@@ -105,7 +105,6 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
-        <CreateButton />
         <ExportButton />
     </TopToolbar>
 );
@@ -148,9 +147,19 @@ const GpsListDesktop = () => {
             <DateField source="capturedAt" label="Captured At" />
             <DateField source="updatedAt" label="Updated At" />
             <ShowButton />
-            <EditButton label='Start Feedback' icon={<></>} sx={{ background: '#2096f3', color: '#fff', padding: '0.3rem', fontWeight: 600, cursor: 'pointer' }} />
+            <EditButton label='Start Feedback' icon={null} />
         </StyledDatagrid>
     </List >
+        <style>
+            {`
+            .MuiTablePagination-selectLabel {
+                margin-top: 1em;
+            }
+            .MuiTablePagination-displayedRows {
+                margin-top: 1rem;
+            }
+        `}
+        </style>
     </>
 };
 

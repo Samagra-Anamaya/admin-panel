@@ -64,7 +64,7 @@ const SubmissionsView = () => {
                             {subData?.isAadhaarAvailable ? <TextField variant='outlined' label="Aadhaar Number" value={subData.aadhaar ? 'Yes' : 'No'} /> : <></>}
                             <TextField variant='outlined' label="Land Title Serial Number" value={subData.landTitleSerialNumber} />
                             <Carousel>
-                                {landImages?.map((el: string) => <img src={el} style={{ width: '20%' }} />)}
+                                {landImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
                             <TextField variant='outlined' label="Claimant Name" value={subData.claimantName} />
                             <TextField variant='outlined' label="Co Claimant Available?" value={subData.coClaimantAvailable ? 'Yes' : 'No'} />
@@ -80,6 +80,9 @@ const SubmissionsView = () => {
                                 [...Array(Number(subData?.fraPlotsClaimed)).keys()].map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
                             }
                             <TextField variant='outlined' label="Has ROR been updated?" value={subData.rorUpdated ? 'Yes' : 'No'} />
+                            <Carousel>
+                                {rorImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}
+                            </Carousel>
                             {subData?.rorUpdated ? <TextField variant='outlined' label="Khata Number" value={subData.khataNumber} /> : <></>}
                         </div>
                         <div className={styles.subData}>

@@ -5,6 +5,7 @@ import { Box, Chip, Typography, useMediaQuery } from '@mui/material';
 import { Theme, styled } from '@mui/material/styles';
 import lodashGet from 'lodash/get';
 import jsonExport from 'jsonexport/dist';
+import { TITLE_STATUS } from '../../enums/Status';
 import {
     BooleanField,
     BulkDeleteButton,
@@ -34,12 +35,19 @@ import {
     useRedirect,
     useRecordContext,
     FunctionField,
+    Datagrid,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { useLocation } from 'react-router-dom';
 import CommonModal from '../../components/Modal';
 export const PostIcon = BookIcon;
 
 
+const colorMap = {
+    [TITLE_STATUS.VERIFIED]: '#43f248',
+    [TITLE_STATUS.FLAGGED]: '#ff7400',
+    [TITLE_STATUS.REJECTED]: '#ff0000',
+    [TITLE_STATUS.PFA]: '#90e0ee'
+}
 
 const exporter = posts => {
     const data = posts.map(post => ({
@@ -71,49 +79,12 @@ const GpsListMobile = () => (
     </InfiniteList>
 );
 
-const StyledDatagrid = styled(DatagridConfigurable)(({ theme }) => ({
-    '& .title': {
-        maxWidth: '16em',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    },
-    '& .hiddenOnSmallScreens': {
-        [theme.breakpoints.down('lg')]: {
-            display: 'none',
-        },
-    },
-    '& .column-tags': {
-        minWidth: '9em',
-    },
-    '& .publishedAt': { fontStyle: 'italic' },
-}));
-
-const PostListBulkActions = memo(
-    ({
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        children,
-        ...props
-    }) => (
-        <Fragment>
-            <BulkDeleteButton {...props} />
-            <BulkExportButton {...props} />
-        </Fragment>
-    )
-);
-
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
         <ExportButton />
     </TopToolbar>
 );
-
-const PostListActionToolbar = ({ children }) => (
-    <Box sx={{ alignItems: 'center', display: 'flex' }}>{children}</Box>
-);
-
-
 
 const tagSort = { field: 'name.en', order: 'ASC' };
 
@@ -136,9 +107,13 @@ const GpsListDesktop = () => {
         exporter={exporter}
         actions={<PostListActions />}
     >
-        <StyledDatagrid
-            bulkActionButtons={<PostListBulkActions />}
+
+        <Datagrid
+            bulkActionButtons={false}
         >
+            <FunctionField render={(record: any) => {
+                return <div style={{ background: colorMap[record.status] || '#90e0ee', width: '0.5rem', height: '30px' }}></div>
+            }} />
             <TextField source="submitterId" label="Submitter ID" />
             <TextField source="status" label="Status" />
             <TextField source="spdpVillageId" label="SPDP Village ID" />
@@ -148,7 +123,7 @@ const GpsListDesktop = () => {
             <DateField source="updatedAt" label="Updated At" />
             <ShowButton />
             <EditButton label='Start Feedback' icon={null} />
-        </StyledDatagrid>
+        </Datagrid>
     </List >
         <style>
             {`

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, TitlePortal } from 'react-admin';
+import { AppBar, Title, TitlePortal } from 'react-admin';
 import { Box, useMediaQuery, Theme } from '@mui/material';
 
 import { AppBarToolbar } from './AppBarToolbar';
@@ -10,7 +10,9 @@ const CustomAppBar = () => {
     );
     return (
         <AppBar color="secondary" toolbar={<AppBarToolbar />}>
-            <TitlePortal />
+            <Box component="span"  >
+                <span>STRIDE Admin Panel</span>
+            </Box>
             {isLargeEnough && <Box component="span" sx={{ flex: 1 }} />}
         </AppBar>
     );

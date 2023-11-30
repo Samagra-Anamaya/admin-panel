@@ -32,6 +32,7 @@ import {
     TopToolbar,
     useTranslate,
     useRedirect,
+    Datagrid,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 
 export const PostIcon = BookIcon;
@@ -121,16 +122,15 @@ const GpsListDesktop = () => {
         exporter={exporter}
         actions={<PostListActions />}
     >
-        <StyledDatagrid
-            bulkActionButtons={<PostListBulkActions />}
+        <Datagrid
+            bulkActionButtons={false}
             rowClick={rowClick}
-            omit={['average_note']}
         >
             <TextField source="gpCode" label="Gp Code" />
             <TextField source="gpName" label="Gp Name" />
             <TextField source="id" label="ID" />
             <TextField source="villagesUnderGp" label="Villages Under GP" />
-        </StyledDatagrid>
+        </Datagrid>
     </List>
         <style>
             {`

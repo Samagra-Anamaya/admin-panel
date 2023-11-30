@@ -32,6 +32,7 @@ import {
     TopToolbar,
     useTranslate,
     useRedirect,
+    Datagrid,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { useLocation } from 'react-router-dom';
 
@@ -144,9 +145,8 @@ const GpsListDesktop = () => {
             gpCode: '5433'
         }}
     >
-        <StyledDatagrid
-            bulkActionButtons={<PostListBulkActions />}
-            omit={['average_note']}
+        <Datagrid
+            bulkActionButtons={false}
             rowClick={rowClick}
         >
             <TextField source="id" label="ID" />
@@ -166,7 +166,7 @@ const GpsListDesktop = () => {
             <TextField source="spdpVillageId" label="Village ID" />
             <TextField source="villageName" label="Village Name" />
             <TextField source="status" label="Status" />
-        </StyledDatagrid>
+        </Datagrid>
     </List>
         <style>
             {`

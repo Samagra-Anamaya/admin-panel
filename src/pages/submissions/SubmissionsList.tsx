@@ -44,7 +44,8 @@ export const PostIcon = BookIcon;
 
 
 const colorMap = {
-    [TITLE_STATUS.VERIFIED]: '#43f248',
+    VERIFIED: '#43f248',
+    [TITLE_STATUS.APPROVED]: '#43f248',
     [TITLE_STATUS.FLAGGED]: '#ff7400',
     [TITLE_STATUS.REJECTED]: '#ff0000',
     [TITLE_STATUS.PFA]: '#90e0ee'

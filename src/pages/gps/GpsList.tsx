@@ -103,6 +103,7 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
+        <FilterButton />
         <ExportButton />
     </TopToolbar>
 );
@@ -117,10 +118,16 @@ const GpsListDesktop = () => {
         redirect("list", `villages?displayedFilters={}&filter={"gpCode":"${record.gpCode}"}`)
     };
 
+    const Filters = [
+        <TextInput label="GP Code" source="gpCode" />,
+        <TextInput label="GP Name" source="gpName" />
+    ]
+
     return <><List
         sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListActions />}
+        filters={Filters}
     >
         <Datagrid
             bulkActionButtons={false}

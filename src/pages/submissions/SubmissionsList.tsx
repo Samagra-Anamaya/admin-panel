@@ -36,6 +36,7 @@ import {
     useRecordContext,
     FunctionField,
     Datagrid,
+    SelectInput,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { useLocation } from 'react-router-dom';
 import CommonModal from '../../components/Modal';
@@ -83,6 +84,7 @@ const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
         <ExportButton />
+        <FilterButton />
     </TopToolbar>
 );
 
@@ -93,17 +95,15 @@ const GpsListDesktop = () => {
     const [currentSubmission, setCurrentSubmission] = React.useState<any>(null);
     const location = useLocation();
     const params: any = new URLSearchParams(location.search);
-    for (const [key, value] of params) {
-        console.log(key, value)
-    }
 
     const Filters = [
-        <TextInput label="villageId" source="spdpVillageId" alwaysOn />
+        <TextInput label="villageId" source="spdpVillageId" alwaysOn />,
+        <SelectInput label="Status" source="status" choices={['SUBMITTED', TITLE_STATUS.APPROVED, TITLE_STATUS.FLAGGED, TITLE_STATUS.PFA, TITLE_STATUS.REJECTED].map(el => ({ id: el, name: el }))} />
     ]
 
     return <><List
         filters={Filters}
-        sort={{ field: 'published_at', order: 'DESC' }}
+        sort={{ field: 'updatedAt', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListActions />}
     >
@@ -122,7 +122,10 @@ const GpsListDesktop = () => {
             <DateField source="capturedAt" label="Captured At" />
             <DateField source="updatedAt" label="Updated At" />
             <ShowButton />
-            <EditButton label='Start Feedback' icon={null} />
+            <FunctionField render={(record: any) => {
+                return <EditButton label={`${record?.status == 'SUBMITTED' ? 'Start' : 'View'} Feedback`} icon={null} />
+            }} />
+
         </Datagrid>
     </List >
         <style>

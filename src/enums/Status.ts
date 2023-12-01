@@ -1,6 +1,6 @@
-export enum TITLE_STATUS {
-    VERIFIED,
-    PFA,
-    FLAGGED,
-    REJECTED
+export const TITLE_STATUS = {
+    APPROVED: 'APPROVED',
+    PFA: 'PFA',
+    FLAGGED: 'FLAGGED',
+    REJECTED: 'REJECTED'
 }

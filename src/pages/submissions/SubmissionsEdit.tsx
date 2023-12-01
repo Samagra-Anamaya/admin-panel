@@ -11,7 +11,7 @@ import { ThemeName, themes } from "../../themes/themes";
 import { TITLE_STATUS } from "../../enums/Status";
 
 const disabled = (record: any) => {
-    if (record?.status == TITLE_STATUS.FLAGGED || record?.status == TITLE_STATUS.APPROVED) return true;
+    if (record?.status == TITLE_STATUS.FLAGGED || record?.status == TITLE_STATUS.APPROVED || record?.status == 'VERIFIED') return true;
     return false;
 }
 

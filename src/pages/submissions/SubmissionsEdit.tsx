@@ -203,17 +203,6 @@ const SubmissionsEdit = () => {
                     </div>
                     {feedbackState?.address || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Address" source="feedbackData.address" /> : <></>}
 
-
-                    <div className={styles.inputContainer}>
-                        <TextInput disabled label="Social Category" source={"submissionData.socialCategory"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.socialCategory ?
-                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("socialCategory")} />
-                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("socialCategory")} fontSize="large" />
-                            : null}
-                    </div>
-                    {feedbackState?.socialCategory || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Social Category" source="feedbackData.socialCategory" /> : <></>}
-
-
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Tribe Name" source={"submissionData.tribeName"} fullWidth />
                         {flag == 'SUBMITTED' ? feedbackState?.tribeName ?
@@ -223,9 +212,17 @@ const SubmissionsEdit = () => {
                     </div>
                     {feedbackState?.tribeName || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Tribe Name" source="feedbackData.tribeName" /> : <></>}
 
+                    <div className={styles.inputContainer}>
+                        <TextInput disabled label="Area Units" source={"submissionData.areaUnits"} fullWidth />
+                        {flag == 'SUBMITTED' ? feedbackState?.areaUnits ?
+                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("areaUnits")} />
+                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("areaUnits")} fontSize="large" />
+                            : null}
+                    </div>
+                    {feedbackState?.areaUnits || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Area Units" source="feedbackData.areaUnits" /> : <></>}
 
                     <div className={styles.inputContainer}>
-                        <TextInput disabled label="Area in Hectares (xx.xx)" source={"submissionData.area"} fullWidth />
+                        <TextInput disabled label="Area" source={"submissionData.area"} fullWidth />
                         {flag == 'SUBMITTED' ? feedbackState?.area ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("area")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("area")} fontSize="large" />

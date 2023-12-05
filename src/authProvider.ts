@@ -21,7 +21,6 @@ export const authProvider: AuthProvider = {
     );
     return fetch(request)
       .then((response) => {
-        console.log({ response });
         if (response.status < 200 || response.status >= 300) {
           throw new Error(response.statusText);
         }
@@ -32,6 +31,8 @@ export const authProvider: AuthProvider = {
           localStorage.setItem("token", resp.result.data.user.token);
           localStorage.setItem("user", JSON.stringify(resp?.result?.data?.user))
           return Promise.resolve(resp);
+        } else {
+          throw new Error(resp?.params?.errMsg);
         }
       });
   },

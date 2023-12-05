@@ -1,11 +1,11 @@
 import { AuthProvider } from "react-admin";
-
+import { jwtDecode } from "jwt-decode";
 
 /**
  * This authProvider is only for test purposes. Don't use it in production.
  */
 export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
+  login: ({ username, password, applicationId }) => {
 
     const request = new Request(
       "https://user-service.staging.anamaya.samagra.io/api/login",
@@ -14,7 +14,7 @@ export const authProvider: AuthProvider = {
         body: JSON.stringify({
           loginId: username,
           password,
-          applicationId: "9a4aecce-686f-44e5-b64f-78ea7311a1c8",
+          applicationId,
         }),
         headers: new Headers({ "Content-Type": "application/json" }),
       }
@@ -30,7 +30,7 @@ export const authProvider: AuthProvider = {
       .then((resp) => {
         if (resp.responseCode === "OK") {
           localStorage.setItem("token", resp.result.data.user.token);
-          localStorage.setItem("user",JSON.stringify(resp))
+          localStorage.setItem("user", JSON.stringify(resp?.result?.data?.user))
           return Promise.resolve(resp);
         }
       });
@@ -43,7 +43,20 @@ export const authProvider: AuthProvider = {
   checkAuth: () =>
     localStorage.getItem("user") ? Promise.resolve() : Promise.reject(),
   getPermissions: () => {
-    return Promise.resolve(undefined);
+    if (localStorage.getItem("user")) {
+      const userData = JSON.parse(localStorage.getItem("user") as string);
+      // console.log("Insude get permissiosn", { userData })
+      const decodedToken = jwtDecode(userData.token);
+      // console.log({ decodedToken })
+      const reg = userData?.user?.registrations?.find(
+        (u: any) => u.applicationId === decodedToken.aud
+      );
+      if (reg?.roles?.length) {
+        // console.log({ reg })
+        return Promise.resolve(reg?.roles);
+      }
+    }
+    return Promise.reject("No Permission");
   },
   getIdentity: () => {
     const persistedUser = localStorage.getItem("user");

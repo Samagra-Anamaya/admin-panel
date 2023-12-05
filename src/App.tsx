@@ -10,29 +10,38 @@ import villages from "./pages/villages";
 import submissions from "./pages/submissions";
 import { themes, ThemeName } from './themes/themes';
 import Layout from './layout/Layout';
+import Login from "./pages/login";
+import { MenuItemsWithPermissionResolver } from "./components/MenuOptions";
 
 
 const store = localStorageStore(undefined, 'stride');
 
 const App = () => {
-  const [themeName] = useStore<ThemeName>('themeName', 'soft');
-  const lightTheme = themes.find(theme => theme.name === themeName)?.light;
-  const darkTheme = themes.find(theme => theme.name === themeName)?.dark;
+
   return <Admin
     store={store}
     dataProvider={customDataProvider}
     authProvider={authProvider}
     lightTheme={nanoLightTheme}
-    darkTheme={nanoDarkTheme}
+    // darkTheme={nanoDarkTheme}
     layout={Layout}
+    loginPage={Login}
   >
-    {/* <Resource name="submissions" list={EnumeratorList} show={EnumeratorDetails}/> */}
-    <Resource name="gps" {...gps} />
-
-    {/* <Resource name="submissions" {...posts}/> */}
+    {/* <Resource name="gps" {...gps} />
     <Resource name="villages" {...villages} />
-    <Resource name="submissions" {...submissions}
-    />
+    <Resource name="submissions" {...submissions} /> */}
+
+    {(permissions) =>
+      MenuItemsWithPermissionResolver(permissions).map((option, index) => {
+        return (
+          <Resource
+            key={index}
+            name={option?.resource}
+            {...option?.props}
+          />
+        );
+      })
+    }
   </Admin>
 
 };

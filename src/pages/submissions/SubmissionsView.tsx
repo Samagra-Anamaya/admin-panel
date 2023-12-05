@@ -71,8 +71,8 @@ const SubmissionsView = () => {
                             {subData?.coClaimantAvailable ? <TextField variant='outlined' label="Co Claimant Name?" value={subData.coClaimantName} /> : <></>}
                             <TextField variant='outlined' label="Parent Name" value={subData.parentName} />
                             <TextField variant='outlined' label="Full Address" value={subData.address} />
-                            <TextField variant='outlined' label="Social Category" value={subData.socialCategory} />
                             <TextField variant='outlined' label="Tribe Name" value={subData.tribeName} />
+                            <TextField variant='outlined' label="Area Units" value={subData.areaUnits} />
                             <TextField variant='outlined' label="Area in Hectares (xx.xx)" value={subData.area} />
                             <TextField variant='outlined' label="No. of Plots Claimed Under FRA" value={subData.fraPlotsClaimed} />
                             {

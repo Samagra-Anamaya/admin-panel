@@ -6,5 +6,9 @@ import SubmissionsView from './SubmissionsView';
 export default {
   list: SubmissionsList,
   edit: SubmissionsEdit,
-  show: SubmissionsView
+  show: SubmissionsView,
+  permissions: {
+    canList: ["admin"],
+    canEdit: ['admin']
+  },
 };

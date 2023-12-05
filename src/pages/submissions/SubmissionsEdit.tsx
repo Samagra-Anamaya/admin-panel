@@ -11,14 +11,14 @@ import { ThemeName, themes } from "../../themes/themes";
 import { TITLE_STATUS } from "../../enums/Status";
 
 const disabled = (record: any) => {
-    if (record?.status == TITLE_STATUS.FLAGGED || record?.status == TITLE_STATUS.APPROVED) return true;
+    if (record?.status == TITLE_STATUS.FLAGGED || record?.status == TITLE_STATUS.APPROVED || record?.status == 'VERIFIED') return true;
     return false;
 }
 
 const EditToolbar: React.FC = props => {
     const record = useRecordContext();
     return <Toolbar {...props} sx={{ paddingBottom: 2 }}>
-        <SaveButton disabled={disabled(record)} type="button" label="Approve" icon={null} sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: TITLE_STATUS.APPROVED })} />
+        <SaveButton disabled={disabled(record)} type="button" label="Approve" icon={null} sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: 'VERIFIED' })} />
         <SaveButton disabled={disabled(record)} type="button" color="warning" icon={null} label="Flag" sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: TITLE_STATUS.FLAGGED })} />
     </Toolbar>
 };

@@ -1,6 +1,8 @@
 import gps from "../../pages/gps";
 import villages from "../../pages/villages";
 import submissions from "../../pages/submissions";
+import transactions from "../../pages/transactions";
+import records from "../../pages/records";
 
 const MenuOptions: any[] = [
     {
@@ -27,7 +29,25 @@ const MenuOptions: any[] = [
         icon: "submissionIcon",
 
         permissions: ["admin"]
-    }
+    },
+    {
+        name: "Transactions",
+        resource: "transactions",
+        props: transactions,
+
+        icon: "submissionIcon",
+
+        permissions: ["department"]
+    },
+    {
+        name: "Records",
+        resource: "records",
+        props: records,
+
+        icon: "submissionIcon",
+
+        permissions: ["department"]
+    },
 ];
 
 export const MenuItemsWithPermissionResolver = (permissions: any) => {

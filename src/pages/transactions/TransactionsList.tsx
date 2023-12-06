@@ -33,8 +33,11 @@ import {
     useTranslate,
     useRedirect,
     Datagrid,
+    DateTimeInput,
+    FunctionField,
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import { useLocation } from 'react-router-dom';
+import { formatDate } from '../../utils/helper';
 
 export const PostIcon = BookIcon;
 
@@ -56,7 +59,7 @@ const PostListMobileActions = () => (
     </TopToolbar>
 );
 
-const GpsListMobile = () => (
+const TransactionsListMobile = () => (
     <InfiniteList
         // sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
@@ -116,54 +119,30 @@ const PostListActionToolbar = ({ children }) => (
 
 const tagSort = { field: 'name.en', order: 'ASC' };
 
-const GpsListDesktop = () => {
-    const location = useLocation();
-    const params: any = new URLSearchParams(location.search);
-    for (const [key, value] of params) {
-        console.log(key, value)
-    }
-
-    const Filters = [
-        <TextInput label="GP Code" source="gpCode" alwaysOn />
-    ]
-
-
-    const redirect = useRedirect();
-
-    const rowClick = (_id, _resource, record) => {
-        console.log("Click", record)
-        redirect("list", `submissions?displayedFilters={}&filter={"spdpVillageId":"${record.spdpVillageId}"}`)
-    };
+const TransactionsListDesktop = () => {
 
 
     return <><List
-        filters={Filters}
-        sort={{ field: 'published_at', order: 'DESC' }}
         exporter={exporter}
         actions={<PostListActions />}
     >
-        <Datagrid
+        <DatagridConfigurable
             bulkActionButtons={false}
-            rowClick={rowClick}
         >
             <TextField source="id" label="ID" />
-            <TextField source="stateCode" label="State Code" />
-            <TextField source="stateName" label="State Name" />
-            <TextField source="districtCode" label="District Code" />
-            <TextField source="districtName" label="District Name" />
-            <TextField source="itdaName" label="ITDA Name" />
-            <TextField source="blockCode" label="Block Code" />
-            <TextField source="blockName" label="Block Name" />
-            <TextField source="isTspBlock" label="Is TSP Block" />
-            <TextField source="gpCode" label="GP Code" />
-            <TextField source="gpName" label="GP Name" />
-            <TextField source="surveySubmitted" label="Survyes Submitted" />
-            <TextField source="surveyToConduct" label="Survyes To Conduct" />
-            <TextField source="flagsRaised" label="Flags Raised" />
-            <TextField source="spdpVillageId" label="Village ID" />
-            <TextField source="villageName" label="Village Name" />
-            <TextField source="status" label="Status" />
-        </Datagrid>
+            <TextField source="total_records" label="Total Records" />
+            <TextField source="valid_records" label="Valid Records" />
+            <TextField source="invalid_records" label="Invalid Records" />
+            <BooleanField source="contain_errors" label="Contains Error" />
+            <BooleanField source="valid_records_saved" label="Valid Records Saved" />
+            <FunctionField label="Transaction Start Time" render={(record: any) => {
+                return <span>{formatDate(new Date(record.transaction_start_time))}</span>
+            }} />
+            <FunctionField label="Transaction End Time" render={(record: any) => {
+                return <span>{formatDate(new Date(record.transaction_end_time))}</span>
+            }} />
+            <ShowButton label='View Full Data' />
+        </DatagridConfigurable>
     </List>
         <style>
             {`
@@ -178,35 +157,12 @@ const GpsListDesktop = () => {
     </>
 };
 
-const VillagesList = () => {
+const TransactionsList = () => {
     const isSmall = useMediaQuery<Theme>(
         theme => theme.breakpoints.down('sm'),
         { noSsr: true }
     );
-    return isSmall ? <GpsListMobile /> : <GpsListDesktop />;
+    return isSmall ? <TransactionsListMobile /> : <TransactionsListDesktop />;
 };
 
-export default VillagesList;
-
-
-// {
-//     "id": 7540,
-//     "stateCode": 21,
-//     "stateName": "ODISHA",
-//     "districtCode": 347,
-//     "districtName": "BARGARH",
-//     "itdaName": "",
-//     "blockCode": 3320,
-//     "blockName": "PAIKMAL",
-//     "isTspBlock": "N",
-//     "gpCode": 116545,
-//     "gpName": "KECHHODADAR",
-//     "surveySubmitted": 0,
-//     "surveyToConduct": 0,
-//     "flagsRaised": 0,
-//     "spdpVillageId": 379727,
-//     "villageName": "Chheliamal",
-//     "meta": null,
-//     "submissions": null,
-//     "status": "UNASSIGNED"
-// }
+export default TransactionsList;

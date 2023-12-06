@@ -63,6 +63,7 @@ export const customDataProvider = {
         });
       }
     }
+
     if (resource === "submissions") {
 
       const { page, perPage } = params.pagination;
@@ -135,11 +136,38 @@ export const customDataProvider = {
         });
       }
     }
+    if (resource == 'transactions') {
+      const { page, perPage } = params.pagination;
+      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        }/ste/transactionHistory?page=${page}&limit=${perPage}`;
+      return httpClient(url).then(({ headers, json }) => {
+        console.log({ headers, json });
+
+        return {
+          data: json,
+          total: json?.length,
+        };
+      });
+    }
+    if (resource == 'records') {
+      const { page, perPage } = params.pagination;
+      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        }/ste/savedSchemeTransactions?page=${page}&limit=${perPage}`;
+      return httpClient(url).then(({ headers, json }) => {
+        console.log({ headers, json });
+
+        return {
+          data: json,
+          total: json?.length,
+        };
+      });
+    }
     // For other resources, use the default implementation
     return dataProvider.getList(resource, params);
   },
   getOne: (resource: any, params: any) => {
     console.log({ resource, params })
+
     if (resource === "submissions") {
       console.log("hello");
       const { id } = params;
@@ -156,6 +184,19 @@ export const customDataProvider = {
         };
       });
     }
+
+    if (resource === 'transactions') {
+      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        }/ste/transactionHistory/${params.id}`;
+      return httpClient(url).then(({ headers, json }) => {
+        console.log({ headers, json });
+
+        return {
+          data: json
+        };
+      });
+    }
+
     // // For other resources, use the default implementation
     return dataProvider.getOne(resource, params);
   },

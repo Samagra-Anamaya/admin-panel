@@ -137,6 +137,52 @@ export const customDataProvider = {
       }
     }
     if (resource == 'transactions') {
+      const path = window.location.href;
+      const t = path.split('/')
+      const n = t.length;
+
+      if (t[n - 1].slice(0, 4) == 'show') {
+        const uuidExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+        if (uuidExp.test(t[n - 2])) {
+
+          const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+            }/ste/transactionHistory/${t[n - 2]}`;
+
+          return httpClient(url).then(({ headers, json }) => {
+
+            let data = [...json.request_body];
+            Object.keys(json.errors)?.forEach((key: any) => {
+              data[key] = { ...data[key], errors: json.errors[key] }
+            })
+
+            let paginatedData = []
+            const params = new URLSearchParams(window.location.href)
+            const page: any = Number(params.get('page')) || 1
+            const perPage: any = Number(params.get('perPage')) || 5;
+            const filter: any = JSON.parse(params.get('filter') || "{}")
+
+            if (filter.saved_records && filter.failed_records) {
+              // Do nothing
+            } else {
+              if (filter.saved_records)
+                data = data.filter(el => el.errors ? false : el)
+              if (filter.failed_records)
+                data = data.filter(el => el.errors ? el : false)
+            }
+
+            if (page && perPage) {
+              paginatedData = data.slice(((page - 1) * perPage), (((page - 1) * perPage) + perPage))
+              console.log("inside perpage", { page, perPage, paginatedData, data })
+            } else paginatedData = data;
+            paginatedData = paginatedData?.map((el, index) => ({ ...el, id: index }))
+
+            return {
+              total: data?.length,
+              data: paginatedData || []
+            };
+          });
+        }
+      }
       const { page, perPage } = params.pagination;
       const url = `${import.meta.env.VITE_SIMPLE_REST_URL
         }/ste/transactionHistory?page=${page}&limit=${perPage}`;
@@ -144,10 +190,12 @@ export const customDataProvider = {
         console.log({ headers, json });
 
         return {
-          data: json,
-          total: json?.length,
+          data: json.transactionHistory,
+          total: json?.totalCount,
         };
       });
+
+
     }
     if (resource == 'records') {
       const { page, perPage } = params.pagination;
@@ -157,8 +205,8 @@ export const customDataProvider = {
         console.log({ headers, json });
 
         return {
-          data: json,
-          total: json?.length,
+          total: json.totalCount,
+          data: json?.savedTransactions,
         };
       });
     }

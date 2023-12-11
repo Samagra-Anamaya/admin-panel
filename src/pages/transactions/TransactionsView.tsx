@@ -1,8 +1,8 @@
 // in src/posts.jsx
-import { Typography } from '@mui/material';
-import { TextField } from '@mui/material'
+import { Chip, Typography } from '@mui/material';
+import { TextField as TextFieldMUI } from '@mui/material'
 import { useEffect, useRef, useState } from 'react';
-import { Show, SimpleShowLayout, useRecordContext, FunctionField } from 'react-admin';
+import { Show, SimpleShowLayout, useRecordContext, FunctionField, List, TextField, DatagridConfigurable, BooleanField, DateField, useTranslate } from 'react-admin';
 import { getImageFromMinio } from '../../utils/getImageFromMinio';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -47,8 +47,67 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+const QuickFilter = (props: any) => {
+    const translate = useTranslate();
+    return <Chip label={translate(props.label)} />
+};
+
+const DataPanel = () => {
+    const record = useRecordContext();
+    return (
+        <div className={styles.dataContainer}>
+            {record.errors && Object?.keys(record?.errors)?.length && <div>
+                <h5>Corrections Table</h5>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell align='left'>Field</StyledTableCell>
+                                <StyledTableCell align='left'>Correction</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {Object.keys(record?.errors)?.map((t, j) => {
+                                return <StyledTableRow key={j}>
+                                    <StyledTableCell align='left'>{t} </StyledTableCell>
+                                    <StyledTableCell align="left"><span style={{ color: '#C60200' }}>{record?.errors?.[t] || ""}</span></StyledTableCell>
+                                </StyledTableRow>
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer> </div>
+            }
+            {record?.departmentData?.length && <div>
+                <h5>Department Data</h5>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell align='left'>Marker</StyledTableCell>
+                                <StyledTableCell align='left'>Value</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {record?.departmentData?.map((t, j) => {
+                                return <StyledTableRow key={j}>
+                                    <StyledTableCell align='left'>{t?.marker} </StyledTableCell>
+                                    <StyledTableCell align="left"><span style={{ color: '#C60200' }}>{t?.value}</span></StyledTableCell>
+                                </StyledTableRow>
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>}
+        </div>
+    );
+};
 
 const TransactionsView = () => {
+
+    const Filters = [
+        <QuickFilter source="saved_records" label="Saved Records" defaultValue={true} />,
+        <QuickFilter source="failed_records" label="Failed Records" defaultValue={true} />
+    ]
 
     return <Show >
         <SimpleShowLayout >
@@ -58,18 +117,43 @@ const TransactionsView = () => {
                     return <div className={styles.formContainer}>
                         <div>
                             <h3>Transaction Details</h3>
-                            <TextField variant='outlined' label="ID" value={record.id} />
-                            <TextField variant='outlined' label="Total Records" value={record.total_records} />
-                            <TextField variant='outlined' label="Valid Records" value={record.valid_records} />
-                            <TextField variant='outlined' label="Invalid Records" value={record.invalid_records} />
-                            <TextField variant='outlined' label="Valid Records Saved" value={record.valid_records_saved ? 'Yes' : 'No'} />
-                            <TextField variant='outlined' label="Contains Errors" value={record.contain_errors ? 'Yes' : 'No'} />
-                            <TextField variant='outlined' label="Transaction Start Time" value={formatDate(new Date(record.transaction_start_time))} />
-                            <TextField variant='outlined' label="Transaction End Time" value={formatDate(new Date(record.transaction_end_time))} />
-                            <TextField variant='outlined' label="Created At" value={formatDate(new Date(record.created_at))} />
-                            <TextField variant='outlined' label="Updated At" value={formatDate(new Date(record.updated_at))} />
+                            <div className={styles.infoRow}>
+                                <TextFieldMUI variant='outlined' label="ID" value={record.id} />
+                                <TextFieldMUI variant='outlined' label="Total Records" value={record.total_records} />
+                                <TextFieldMUI variant='outlined' label="Valid Records" value={record.valid_records} />
+                                <TextFieldMUI variant='outlined' label="Invalid Records" value={record.invalid_records} />
+                                <TextFieldMUI variant='outlined' label="Valid Records Saved" value={record.valid_records_saved ? 'Yes' : 'No'} />
+                                <TextFieldMUI variant='outlined' label="Contains Errors" value={record.contain_errors ? 'Yes' : 'No'} />
+                                <TextFieldMUI variant='outlined' label="Transaction Start Time" value={formatDate(new Date(record.transaction_start_time))} />
+                                <TextFieldMUI variant='outlined' label="Transaction End Time" value={formatDate(new Date(record.transaction_end_time))} />
+                                <TextFieldMUI variant='outlined' label="Created At" value={formatDate(new Date(record.created_at))} />
+                                <TextFieldMUI variant='outlined' label="Updated At" value={formatDate(new Date(record.updated_at))} />
+                            </div>
+                            <List
+                                filters={Filters}
+                            >
+                                <DatagridConfigurable
+                                    bulkActionButtons={false}
+                                    expand={<DataPanel />}
+                                >
+                                    <FunctionField render={(rec: any) => {
+                                        return <div style={{ background: rec.errors ? '#ff0000' : '#43f248', width: '0.5rem', height: '30px' }}></div>
+                                    }} />
+                                    <TextField source="aadhaarNumber" label="Aadhaar Number" />
+                                    <TextField source="aadhaarReferenceNumber" label="Aadhaar Reference Number" />
+                                    <TextField source="uniqueBeneficiaryId" label="Unique Beneficiary ID" />
+                                    <TextField source="financialYear" label="Financial Year" />
+                                    <DateField source="transactionDate" label="Transaction Date" />
+                                    <TextField source="transactionType" label="Transaction Type" />
+                                    <BooleanField source="transactionAmount" label="Transaction Amount" />
+                                    <BooleanField source="inKindBenefitDetail" label="In Kind Benefit Detail" />
+                                    <BooleanField source="schemeCode" label="Scheme Code" />
+                                </DatagridConfigurable>
+                            </List>
+
+
                         </div>
-                        <div>
+                        {/* <div>
                             <h3>Request Body Details</h3>
                             {record?.request_body?.map((el: any, i: number) => {
                                 return <Accordion>
@@ -113,7 +197,7 @@ const TransactionsView = () => {
                             })}
 
 
-                        </div>
+                        </div> */}
 
                     </div>
                 }}
@@ -124,169 +208,25 @@ const TransactionsView = () => {
 
 export default TransactionsView;
 
-
 // {
-//     "id": "214bcf1d-a0d6-4b5c-a269-94c13a7f9bb0",
-//     "request_body": [
+//     "remarks": "",
+//     "schemeCode": "",
+//     "aadhaarNumber": "a23412341234",
+//     "financialYear": "2021-2022",
+//     "departmentData": [
 //         {
-//             "remarks": "",
-//             "schemeCode": "",
-//             "aadhaarNumber": "a23412341234",
-//             "financialYear": "2021-2022",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-13-2022",
-//             "transactionType": "",
-//             "transactionAmount": 5000,
-//             "inKindBenefitDetail": "",
-//             "uniqueBeneficiaryId": "",
-//             "aadhaarReferenceNumber": "12341234123456"
+//             "value": "21-01-1999",
+//             "marker": "Date of Birth"
 //         },
 //         {
-//             "remarks": "",
-//             "schemeCode": "VULC8",
-//             "aadhaarNumber": "1234123412345",
-//             "financialYear": "2021-22",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-08-2022",
-//             "transactionType": "Cash",
-//             "transactionAmount": 5000,
-//             "inKindBenefitDetail": "Training",
-//             "uniqueBeneficiaryId": "5812844",
-//             "aadhaarReferenceNumber": "1234123412345"
-//         },
-//         {
-//             "remarks": "",
-//             "schemeCode": "VULC8",
-//             "aadhaarNumber": "123412341234",
-//             "financialYear": "2021-22",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-08-2022",
-//             "transactionType": "Cash",
-//             "transactionAmount": 5000,
-//             "inKindBenefitDetail": "Training",
-//             "uniqueBeneficiaryId": "5812844",
-//             "aadhaarReferenceNumber": "1234123412345"
-//         },
-//         {
-//             "remarks": "",
-//             "schemeCode": "VULC8",
-//             "aadhaarNumber": "123412341234",
-//             "financialYear": "2021-22",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-08-2022",
-//             "transactionType": "Cash",
-//             "transactionAmount": "5000",
-//             "inKindBenefitDetail": "Training",
-//             "uniqueBeneficiaryId": "5812844",
-//             "aadhaarReferenceNumber": "1234123412345"
-//         },
-//         {
-//             "remarks": "",
-//             "schemeCode": "VULC8",
-//             "aadhaarNumber": "123412341234",
-//             "financialYear": "2021-22",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-08-2022",
-//             "transactionType": "Cash",
-//             "transactionAmount": 5000,
-//             "inKindBenefitDetail": "Training",
-//             "uniqueBeneficiaryId": "5812844",
-//             "aadhaarReferenceNumber": "1234123412345"
-//         },
-//         {
-//             "remarks": "",
-//             "schemeCode": "VULC8",
-//             "aadhaarNumber": "123412341234",
-//             "financialYear": "2021-22",
-//             "departmentData": [
-//                 {
-//                     "value": "21-01-1999",
-//                     "marker": "Date of Birth"
-//                 },
-//                 {
-//                     "value": "ST",
-//                     "marker": "Social Category"
-//                 }
-//             ],
-//             "transactionDate": "12-08-2022",
-//             "transactionType": "Cash",
-//             "transactionAmount": 5000,
-//             "inKindBenefitDetail": "Training",
-//             "uniqueBeneficiaryId": "5812844",
-//             "aadhaarReferenceNumber": "1234123412345"
+//             "value": "ST",
+//             "marker": "Social Category"
 //         }
 //     ],
-//     "total_records": 6,
-//     "valid_records": 3,
-//     "invalid_records": 3,
-//     "contain_errors": true,
-//     "valid_records_saved": true,
-//     "errors": {
-//         "0": {
-//             "schemeCode": "EMPTY SCHEME CODE",
-//             "aadhaarNumber": "AADHAAR NUMBER IS NOT A NUMBER",
-//             "financialYear": "FINANCIAL NOT IN FORMAT OF YYYY-YY",
-//             "transactionDate": "TRANSACTION DATE NOT IN FORMAT OF DD-MM-YYYY",
-//             "transactionType": "EMPTY TRANSACTION TYPE",
-//             "inKindBenefitDetail": "EMPTY IN KIND BENEFIT DETAIL",
-//             "uniqueBeneficiaryId": "EMPTY UNIQUE BENEFICIARY ID",
-//             "aadhaarReferenceNumber": "AADHAAR REFERENCE NUMBER SHOULD BE OF LENGTH 13"
-//         },
-//         "1": {
-//             "aadhaarNumber": "AADHAAR NUMBER SHOULD BE OF LENGTH 12"
-//         },
-//         "3": {
-//             "transactionAmount": "TRANSACTION AMOUNT SHOULD BE AN INTEGER"
-//         }
-//     },
-//     "user_id": "c51e4e0c-b326-44aa-bdb0-3ba5850ac106",
-//     "transaction_start_time": "2023-12-05T11:26:15.868Z",
-//     "transaction_end_time": "2023-12-05T11:26:15.880Z",
-//     "created_at": "2023-12-05T11:26:15.882Z",
-//     "updated_at": "2023-12-05T11:26:15.882Z"
+//     "transactionDate": "12-13-2022",
+//     "transactionType": "",
+//     "transactionAmount": 5000,
+//     "inKindBenefitDetail": "",
+//     "uniqueBeneficiaryId": "",
+//     "aadhaarReferenceNumber": "12341234123456"
 // }

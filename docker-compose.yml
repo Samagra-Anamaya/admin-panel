@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  client:
+    build: .
+    ports:
+      - 5175:5175
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules

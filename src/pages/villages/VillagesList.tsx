@@ -104,6 +104,7 @@ const PostListBulkActions = memo(
 const PostListActions = () => (
     <TopToolbar>
         <SelectColumnsButton />
+        <FilterButton />
         <ExportButton />
     </TopToolbar>
 );
@@ -124,7 +125,8 @@ const GpsListDesktop = () => {
     }
 
     const Filters = [
-        <TextInput label="GP Code" source="gpCode" alwaysOn />
+        <TextInput label="GP Code" source="gpCode" />,
+        <TextInput label="Village Name" source="villageName" />
     ]
 
 

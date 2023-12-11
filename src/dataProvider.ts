@@ -110,9 +110,15 @@ export const customDataProvider = {
       const { page, perPage } = params.pagination;
       console.log({ params, page, perPage });
       // Define your custom fetch logic for the 'users' resource here
+
       if (params?.filter?.gpCode?.length) {
-        const url = `${import.meta.env.VITE_SIMPLE_REST_URL
-          }/utils/villages/gp/${params.filter.gpCode}`;
+        let url = `${import.meta.env.VITE_SIMPLE_REST_URL
+          }/utils/villages/gp/${params.filter.gpCode}`
+        if (params?.filter?.villageName) {
+          url = url + `?villageName=${params?.filter?.villageName}&page=${page}&limit=${perPage}`
+        } else
+          url = url + `?page=${page}&limit=${perPage}`
+
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
 
@@ -123,8 +129,13 @@ export const customDataProvider = {
           };
         });
       } else {
-        const url = `${import.meta.env.VITE_SIMPLE_REST_URL
-          }/utils/villageData?page=${page}&limit=${perPage}`;
+        let url = '';
+        if (params?.filter?.villageName) {
+          url = `${import.meta.env.VITE_SIMPLE_REST_URL
+            }/utils/villageData?villageName=${params.filter.villageName}&page=${page}&limit=${perPage}`
+        } else
+          url = `${import.meta.env.VITE_SIMPLE_REST_URL
+            }/utils/villageData?page=${page}&limit=${perPage}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
 

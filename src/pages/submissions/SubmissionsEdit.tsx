@@ -11,14 +11,14 @@ import { ThemeName, themes } from "../../themes/themes";
 import { TITLE_STATUS } from "../../enums/Status";
 
 const disabled = (record: any) => {
-    if (record?.status == TITLE_STATUS.FLAGGED || record?.status == TITLE_STATUS.APPROVED || record?.status == 'VERIFIED') return true;
-    return false;
+    if (record?.status == TITLE_STATUS.PFA) return false;
+    return true;
 }
 
 const EditToolbar: React.FC = props => {
     const record = useRecordContext();
     return <Toolbar {...props} sx={{ paddingBottom: 2 }}>
-        <SaveButton disabled={disabled(record)} type="button" label="Approve" icon={null} sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: 'VERIFIED' })} />
+        <SaveButton disabled={disabled(record)} type="button" label="Approve" icon={null} sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: TITLE_STATUS.APPROVED })} />
         <SaveButton disabled={disabled(record)} type="button" color="warning" icon={null} label="Flag" sx={{ marginLeft: 5, padding: '0.5rem 2rem' }} transform={(data) => ({ ...data, status: TITLE_STATUS.FLAGGED })} />
     </Toolbar>
 };
@@ -78,12 +78,12 @@ const SubmissionsEdit = () => {
             return [...Array(Number(subData?.fraPlotsClaimed)).keys()].map(el => <>
                 <div className={styles.inputContainer}>
                     <TextInput disabled label={`Plot Number ${el + 1}`} source={`submissionData.plotNumber${el + 1}`} fullWidth />
-                    {flag == 'SUBMITTED' ? feedbackState?.[`plotNumber${el + 1}`] ?
+                    {flag == TITLE_STATUS.PFA ? feedbackState?.[`plotNumber${el + 1}`] ?
                         <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick(`plotNumber${el + 1}`)} />
                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick(`plotNumber${el + 1}`)} fontSize="large" />
                         : null}
                 </div>
-                {feedbackState?.[`plotNumber${el + 1}`] || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label={`Feedback for Plot Number ${el + 1}`} source={`feedbackData.plotNumber${el + 1}`} /> : <></>}
+                {feedbackState?.[`plotNumber${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for Plot Number ${el + 1}`} source={`feedbackData.plotNumber${el + 1}`} /> : <></>}
 
             </>)
         return <></>
@@ -104,13 +104,13 @@ const SubmissionsEdit = () => {
                     {/*Aadhar Input*/}
                     <div className={styles.inputContainer}>
                         <BooleanInput disabled label="Aadhaar Available?" source="submissionData.isAadhaarAvailable" />
-                        {flag == 'SUBMITTED' ? feedbackState?.isAadhaarAvailable ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.isAadhaarAvailable ?
                             <CancelIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("isAadhaarAvailable")} />
                             : <AddCommentIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("isAadhaarAvailable")} fontSize="large" />
                             : null}
 
                     </div>
-                    {feedbackState?.isAadhaarAvailable || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Aadhaar Available" source="feedbackData.isAadhaarAvailable" /> : <></>}
+                    {feedbackState?.isAadhaarAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Available" source="feedbackData.isAadhaarAvailable" /> : <></>}
 
                     {/*Aadhar Number Input*/}
                     <FunctionField render={(record: any) => {
@@ -126,12 +126,12 @@ const SubmissionsEdit = () => {
                             return <>
                                 <div className={styles.inputContainer}>
                                     <TextInput disabled label="Aadhaar Number" source="submissionData.aadharNumber" fullWidth />
-                                    {flag == 'SUBMITTED' ? feedbackState?.aadharNumber ?
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.aadharNumber ?
                                         <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("aadharNumber")} />
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("aadharNumber")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.aadharNumber || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Aadhaar Number" source="feedbackData.aadharNumber" fullWidth /> : <></>}
+                                {feedbackState?.aadharNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Number" source="feedbackData.aadharNumber" fullWidth /> : <></>}
                             </>
                         }
                     }} />
@@ -139,46 +139,46 @@ const SubmissionsEdit = () => {
                     {/*Land Title Serial Number*/}
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Land Title Serial Number" source="submissionData.landTitleSerialNumber" fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.landTitleSerialNumber ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.landTitleSerialNumber ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("landTitleSerialNumber")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("landTitleSerialNumber")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.landTitleSerialNumber || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Land Title Serial Number" source="feedbackData.landTitleSerialNumber" /> : <></>}
+                    {feedbackState?.landTitleSerialNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Land Title Serial Number" source="feedbackData.landTitleSerialNumber" /> : <></>}
 
 
                     {/*Claimant Name*/}
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Claimant Name" source={"submissionData.claimantName"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.claimantName ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.claimantName ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("claimantName")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("claimantName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.claimantName || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Claimant Name" source="feedbackData.claimantName" /> : <></>}
+                    {feedbackState?.claimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Claimant Name" source="feedbackData.claimantName" /> : <></>}
 
 
                     {/*Co Claimant Available */}
                     <div className={styles.inputContainer}>
                         <BooleanInput disabled label="Co Claimant Available?" source={"submissionData.coClaimantAvailable"} />
-                        {flag == 'SUBMITTED' ? feedbackState?.coClaimantAvailable ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.coClaimantAvailable ?
                             <CancelIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("coClaimantAvailable")} />
                             : <AddCommentIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantAvailable")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.coClaimantAvailable || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Co Claimant Available" source="feedbackData.coClaimantAvailable" /> : <></>}
+                    {feedbackState?.coClaimantAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Available" source="feedbackData.coClaimantAvailable" /> : <></>}
 
                     <FunctionField render={(record: any) => {
                         if (record?.submissionData?.coClaimantAvailable) {
                             return <>
                                 <div className={styles.inputContainer}>
                                     <TextInput disabled label="Co Claimant Name" source="submissionData.coClaimantName" fullWidth />
-                                    {flag == 'SUBMITTED' ? feedbackState?.coClaimantName ?
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.coClaimantName ?
                                         <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("coClaimantName")} />
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantName")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.coClaimantName || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Co Claimant Name" source="feedbackData.coClaimantName" fullWidth /> : <></>}
+                                {feedbackState?.coClaimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Name" source="feedbackData.coClaimantName" fullWidth /> : <></>}
                             </>
                         }
                     }} />
@@ -186,59 +186,59 @@ const SubmissionsEdit = () => {
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Parent Name" source={"submissionData.parentName"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.parentName ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.parentName ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("parentName")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("parentName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.parentName || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Parent Name" source="feedbackData.parentName" /> : <></>}
+                    {feedbackState?.parentName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Parent Name" source="feedbackData.parentName" /> : <></>}
 
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Full Address" source={"submissionData.address"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.address ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.address ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("address")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("address")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.address || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Address" source="feedbackData.address" /> : <></>}
+                    {feedbackState?.address || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Address" source="feedbackData.address" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Tribe Name" source={"submissionData.tribeName"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.tribeName ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.tribeName ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("tribeName")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("tribeName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.tribeName || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Tribe Name" source="feedbackData.tribeName" /> : <></>}
+                    {feedbackState?.tribeName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Tribe Name" source="feedbackData.tribeName" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Area Units" source={"submissionData.areaUnits"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.areaUnits ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.areaUnits ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("areaUnits")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("areaUnits")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.areaUnits || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Area Units" source="feedbackData.areaUnits" /> : <></>}
+                    {feedbackState?.areaUnits || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area Units" source="feedbackData.areaUnits" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Area" source={"submissionData.area"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.area ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.area ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("area")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("area")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.area || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Area" source="feedbackData.area" /> : <></>}
+                    {feedbackState?.area || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area" source="feedbackData.area" /> : <></>}
 
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="No. of Plots Claimed Under FRA" source={"submissionData.fraPlotsClaimed"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.fraPlotsClaimed ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.fraPlotsClaimed ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.fraPlotsClaimed || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Plots Claimed" source="feedbackData.fraPlotsClaimed" /> : <></>}
+                    {feedbackState?.fraPlotsClaimed || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Plots Claimed" source="feedbackData.fraPlotsClaimed" /> : <></>}
 
 
 
@@ -246,12 +246,12 @@ const SubmissionsEdit = () => {
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Has ROR been updated?" source={"submissionData.rorUpdated"} fullWidth />
-                        {flag == 'SUBMITTED' ? feedbackState?.rorUpdated ?
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.rorUpdated ?
                             <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("rorUpdated")} />
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("rorUpdated")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.rorUpdated || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for ROR Updated" source="feedbackData.rorUpdated" /> : <></>}
+                    {feedbackState?.rorUpdated || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for ROR Updated" source="feedbackData.rorUpdated" /> : <></>}
 
 
                     <FunctionField render={(record: any) => {
@@ -259,17 +259,17 @@ const SubmissionsEdit = () => {
                             return <>
                                 <div className={styles.inputContainer}>
                                     <TextInput disabled label="Khata Number" source="submissionData.khataNumber" fullWidth />
-                                    {flag == 'SUBMITTED' ? feedbackState?.khataNumber ?
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.khataNumber ?
                                         <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("khataNumber")} />
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("khataNumber")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.khataNumber || flag != 'SUBMITTED' ? <TextInput disabled={flag != 'SUBMITTED'} required label="Feedback for Khata Number" source="feedbackData.khataNumber" fullWidth /> : <></>}
+                                {feedbackState?.khataNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Khata Number" source="feedbackData.khataNumber" fullWidth /> : <></>}
                             </>
                         }
                     }} />
 
-                    <TextInput disabled={flag != 'SUBMITTED'} label="Overall Feedback" source={"feedbackData.feedback"} />
+                    <TextInput disabled={flag != TITLE_STATUS.PFA} label="Overall Feedback" source={"feedbackData.feedback"} />
 
 
                 </div>

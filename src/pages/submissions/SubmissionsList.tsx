@@ -92,14 +92,11 @@ const PostListActions = () => (
 const tagSort = { field: 'name.en', order: 'ASC' };
 
 const GpsListDesktop = () => {
-    const [showModal, setShowModal] = React.useState(false);
-    const [currentSubmission, setCurrentSubmission] = React.useState<any>(null);
     const location = useLocation();
-    const params: any = new URLSearchParams(location.search);
 
     const Filters = [
-        <TextInput label="villageId" source="spdpVillageId" alwaysOn />,
-        <SelectInput label="Status" source="status" choices={['SUBMITTED', TITLE_STATUS.APPROVED, TITLE_STATUS.FLAGGED, TITLE_STATUS.PFA, TITLE_STATUS.REJECTED].map(el => ({ id: el, name: el }))} />
+        <TextInput label="villageId" source="spdpVillageId" />,
+        <SelectInput label="Status" source="status" choices={[TITLE_STATUS.APPROVED, TITLE_STATUS.FLAGGED, TITLE_STATUS.PFA, TITLE_STATUS.REJECTED].map(el => ({ id: el, name: el }))} />
     ]
 
     return <><List
@@ -124,7 +121,7 @@ const GpsListDesktop = () => {
             <DateField source="updatedAt" label="Updated At" />
             <ShowButton />
             <FunctionField render={(record: any) => {
-                return <EditButton label={`${record?.status == 'SUBMITTED' ? 'Start' : 'View'} Feedback`} icon={null} />
+                return <EditButton label={`${record?.status == TITLE_STATUS.PFA ? 'Start' : 'View'} Feedback`} icon={null} />
             }} />
 
         </Datagrid>

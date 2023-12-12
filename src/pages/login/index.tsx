@@ -58,7 +58,7 @@ const Login = () => {
                             <div className={styles.adminTypeContainer}>
                                 <h4>Select Admin Type</h4>
                                 <Button variant="contained" sx={{ padding: '0.7em' }} onClick={() => setApplicationId(import.meta.env.VITE_ANAMAYA_APPLICATION_ID)}>Admin 1</Button>
-                                <Button variant="contained" sx={{ padding: '0.7em' }} onClick={() => setApplicationId(import.meta.env.VITE_SCHEME_APPLICATION_ID)}>Admin 2</Button>
+                                <Button variant="contained" sx={{ padding: '0.7em' }} onClick={() => setApplicationId(import.meta.env.VITE_STE_APPLICATION_ID)}>STE ADMIN</Button>
                             </div>
                         </>}
 

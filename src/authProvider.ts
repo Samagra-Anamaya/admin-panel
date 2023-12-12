@@ -8,7 +8,7 @@ export const authProvider: AuthProvider = {
   login: ({ username, password, applicationId }) => {
 
     const request = new Request(
-      "https://user-service.staging.anamaya.samagra.io/api/login",
+      `${import.meta.env.VITE_USER_SERVICE_URL}/login`,
       {
         method: "POST",
         body: JSON.stringify({

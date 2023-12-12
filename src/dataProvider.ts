@@ -122,10 +122,9 @@ export const customDataProvider = {
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
 
-          const total = json?.length || 0;
           return {
-            data: json,
-            total,
+            data: json.villages,
+            total: json.totalCount
           };
         });
       } else {

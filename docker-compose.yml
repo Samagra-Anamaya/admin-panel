@@ -2,9 +2,12 @@ version: "3"
 
 services:
   client:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_BACKEND_SERVICE_URL: ${VITE_BACKEND_SERVICE_URL}
+        VITE_ANAMAYA_APPLICATION_ID: ${VITE_ANAMAYA_APPLICATION_ID}
+        VITE_STE_APPLICATION_ID: ${VITE_STE_APPLICATION_ID}
+        VITE_USER_SERVICE_URL: ${VITE_USER_SERVICE_URL}
     ports:
       - 5175:5175
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules

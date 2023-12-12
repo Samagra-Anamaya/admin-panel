@@ -14,7 +14,7 @@ const httpClient = (url: any, options: any = {}) => {
 };
 
 export const dataProvider = simpleRestProvider(
-  import.meta.env.VITE_SIMPLE_REST_URL,
+  import.meta.env.VITE_BACKEND_SERVICE_URL,
   httpClient
 );
 // console.log({ dataProvider })
@@ -27,7 +27,7 @@ export const customDataProvider = {
       const { page, perPage } = params.pagination;
 
       if (Object.keys(params.filter)?.length) {
-        let url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/utils/villages/getGps`;
         if (params?.filter?.gpCode && params?.filter?.gpName) {
           url = url + `?gpCode=${params.filter.gpCode}&gpName=${params.filter.gpName}&page=${page}&limit=${perPage}`
@@ -49,7 +49,7 @@ export const customDataProvider = {
         });
       } else {
         // Define your custom fetch logic for the 'users' resource here
-        const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/utils/villages/getGps?page=${page}&limit=${perPage}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -69,7 +69,7 @@ export const customDataProvider = {
       const { page, perPage } = params.pagination;
       // Define your custom fetch logic for the 'users' resource here
       if (Object.keys(params.filter)?.length) {
-        let url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/submissions`;
         if (params?.filter?.spdpVillageId)
           url = url + `/${params?.filter?.spdpVillageId}`;
@@ -92,7 +92,7 @@ export const customDataProvider = {
           };
         });
       } else {
-        const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/submissions?page=${page}&limit=${perPage}&sortBy=${params?.sort?.field}&order=${params?.sort?.order.toLowerCase()}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -112,7 +112,7 @@ export const customDataProvider = {
       // Define your custom fetch logic for the 'users' resource here
 
       if (params?.filter?.gpCode?.length) {
-        let url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/utils/villages/gp/${params.filter.gpCode}`
         if (params?.filter?.villageName) {
           url = url + `?villageName=${params?.filter?.villageName}&page=${page}&limit=${perPage}`
@@ -130,10 +130,10 @@ export const customDataProvider = {
       } else {
         let url = '';
         if (params?.filter?.villageName) {
-          url = `${import.meta.env.VITE_SIMPLE_REST_URL
+          url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
             }/utils/villageData?villageName=${params.filter.villageName}&page=${page}&limit=${perPage}`
         } else
-          url = `${import.meta.env.VITE_SIMPLE_REST_URL
+          url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
             }/utils/villageData?page=${page}&limit=${perPage}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -155,7 +155,7 @@ export const customDataProvider = {
         const uuidExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
         if (uuidExp.test(t[n - 2])) {
 
-          const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+          const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
             }/ste/transactionHistory/${t[n - 2]}`;
 
           return httpClient(url).then(({ headers, json }) => {
@@ -194,7 +194,7 @@ export const customDataProvider = {
         }
       }
       const { page, perPage } = params.pagination;
-      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
         }/ste/transactionHistory?page=${page}&limit=${perPage}`;
       return httpClient(url).then(({ headers, json }) => {
         console.log({ headers, json });
@@ -209,7 +209,7 @@ export const customDataProvider = {
     }
     if (resource == 'records') {
       const { page, perPage } = params.pagination;
-      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
         }/ste/savedSchemeTransactions?page=${page}&limit=${perPage}`;
       return httpClient(url).then(({ headers, json }) => {
         console.log({ headers, json });
@@ -231,7 +231,7 @@ export const customDataProvider = {
       const { id } = params;
 
       // Define your custom fetch logic for the 'users' resource here
-      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
         }/submissions/submissionDetails/${id}`;
       return httpClient(url).then(({ json }) => {
         console.log({ json });
@@ -244,7 +244,7 @@ export const customDataProvider = {
     }
 
     if (resource === 'transactions') {
-      const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
         }/ste/transactionHistory/${params.id}`;
       return httpClient(url).then(({ headers, json }) => {
         console.log({ headers, json });
@@ -265,7 +265,7 @@ export const customDataProvider = {
       case 'submissions': {
         const flag = params?.data?.status;
 
-        const url = `${import.meta.env.VITE_SIMPLE_REST_URL
+        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
           }/submissions/${params.id}/submitFeedback`;
 
         let feedbackBody = null;

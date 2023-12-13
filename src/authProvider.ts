@@ -1,5 +1,6 @@
 import { AuthProvider } from "react-admin";
 import { jwtDecode } from "jwt-decode";
+import { store } from "./App";
 
 /**
  * This authProvider is only for test purposes. Don't use it in production.
@@ -38,6 +39,7 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem("user");
+    store.removeItem('reload')
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),

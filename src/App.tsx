@@ -4,6 +4,7 @@ import { authProvider } from "./authProvider";
 import Layout from './layout/Layout';
 import Login from "./pages/login";
 import { MenuItemsWithPermissionResolver } from "./components/MenuOptions";
+import { useEffect } from "react";
 
 
 export const store = localStorageStore(undefined, 'stride');
@@ -21,6 +22,19 @@ const App = () => {
     }
   }, 500)
 
+  const loginRedirect = async () => {
+    try {
+      //@ts-ignore
+      await authProvider.checkAuth();
+    } catch (err) {
+      if (!window.location.href.includes('login'))
+        window.location.href = '#/login'
+    }
+  }
+
+  useEffect(() => {
+    loginRedirect();
+  }, [])
 
   return <Admin
     store={store}

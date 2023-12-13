@@ -27,7 +27,6 @@ const App = () => {
       //@ts-ignore
       await authProvider.checkAuth();
     } catch (err) {
-      alert("Redirecting to login")
       if (!window.location.href.includes('login'))
         window.location.href = '#/login'
     }

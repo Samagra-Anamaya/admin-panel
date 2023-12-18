@@ -1,7 +1,9 @@
 import simpleRestProvider from "ra-data-simple-rest";
-import { fetchUtils } from "react-admin";
+import { HttpError, Resource, fetchUtils } from "react-admin";
 import { map } from 'lodash';
 import { TITLE_STATUS } from "./enums/Status";
+
+const BASE_URI = import.meta.env.VITE_BACKEND_SERVICE_URL;
 
 const httpClient = (url: any, options: any = {}) => {
   console.log({ url, options });
@@ -14,7 +16,7 @@ const httpClient = (url: any, options: any = {}) => {
 };
 
 export const dataProvider = simpleRestProvider(
-  import.meta.env.VITE_BACKEND_SERVICE_URL,
+  BASE_URI,
   httpClient
 );
 // console.log({ dataProvider })
@@ -27,7 +29,7 @@ export const customDataProvider = {
       const { page, perPage } = params.pagination;
 
       if (Object.keys(params.filter)?.length) {
-        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        let url = `${BASE_URI
           }/utils/villages/getGps`;
         if (params?.filter?.gpCode && params?.filter?.gpName) {
           url = url + `?gpCode=${params.filter.gpCode}&gpName=${params.filter.gpName}&page=${page}&limit=${perPage}`
@@ -49,7 +51,7 @@ export const customDataProvider = {
         });
       } else {
         // Define your custom fetch logic for the 'users' resource here
-        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        const url = `${BASE_URI
           }/utils/villages/getGps?page=${page}&limit=${perPage}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -69,7 +71,7 @@ export const customDataProvider = {
       const { page, perPage } = params.pagination;
       // Define your custom fetch logic for the 'users' resource here
       if (Object.keys(params.filter)?.length) {
-        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        let url = `${BASE_URI
           }/submissions`;
         if (params?.filter?.spdpVillageId)
           url = url + `/${params?.filter?.spdpVillageId}`;
@@ -92,7 +94,7 @@ export const customDataProvider = {
           };
         });
       } else {
-        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        const url = `${BASE_URI
           }/submissions?page=${page}&limit=${perPage}&sortBy=${params?.sort?.field}&order=${params?.sort?.order.toLowerCase()}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -112,7 +114,7 @@ export const customDataProvider = {
       // Define your custom fetch logic for the 'users' resource here
 
       if (params?.filter?.gpCode?.length) {
-        let url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        let url = `${BASE_URI
           }/utils/villages/gp/${params.filter.gpCode}`
         if (params?.filter?.villageName) {
           url = url + `?villageName=${params?.filter?.villageName}&page=${page}&limit=${perPage}`
@@ -130,10 +132,10 @@ export const customDataProvider = {
       } else {
         let url = '';
         if (params?.filter?.villageName) {
-          url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+          url = `${BASE_URI
             }/utils/villageData?villageName=${params.filter.villageName}&page=${page}&limit=${perPage}`
         } else
-          url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+          url = `${BASE_URI
             }/utils/villageData?page=${page}&limit=${perPage}`;
         return httpClient(url).then(({ headers, json }) => {
           console.log({ headers, json });
@@ -155,7 +157,7 @@ export const customDataProvider = {
         const uuidExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
         if (uuidExp.test(t[n - 2])) {
 
-          const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+          const url = `${BASE_URI
             }/ste/transactionHistory/${t[n - 2]}`;
 
           return httpClient(url).then(({ headers, json }) => {
@@ -194,7 +196,7 @@ export const customDataProvider = {
         }
       }
       const { page, perPage } = params.pagination;
-      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+      const url = `${BASE_URI
         }/ste/transactionHistory?page=${page}&limit=${perPage}`;
       return httpClient(url).then(({ headers, json }) => {
         console.log({ headers, json });
@@ -209,7 +211,7 @@ export const customDataProvider = {
     }
     if (resource == 'records') {
       const { page, perPage } = params.pagination;
-      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+      const url = `${BASE_URI
         }/ste/savedSchemeTransactions?page=${page}&limit=${perPage}`;
       return httpClient(url).then(({ headers, json }) => {
         console.log({ headers, json });
@@ -220,52 +222,72 @@ export const customDataProvider = {
         };
       });
     }
+
+    if (resource === "scheme") {
+      const { page, perPage } = params.pagination;
+
+      // Define your custom fetch logic for the 'users' resource here
+      const url = `${BASE_URI
+        }/ste/getAllSchema?page=${page}&limit=${perPage}`;
+      return httpClient(url).then(({ headers, json }) => {
+        console.log({ headers, json });
+
+        const total = json?.result?.totalCount;
+        return {
+          data: json.result.schemeSchema,
+          total,
+        };
+      });
+    }
     // For other resources, use the default implementation
     return dataProvider.getList(resource, params);
   },
   getOne: (resource: any, params: any) => {
-    console.log({ resource, params })
+    const { id } = params
+    switch (resource) {
+      case 'submissions': {
+        // Define your custom fetch logic for the 'users' resource here
+        const url = `${BASE_URI
+          }/submissions/submissionDetails/${id}`;
+        return httpClient(url).then(({ json }) => {
+          return {
+            data: json?.result?.submission,
+          };
+        });
+      }
 
-    if (resource === "submissions") {
-      console.log("hello");
-      const { id } = params;
+      case 'transactions': {
+        const url = `${BASE_URI
+          }/ste/transactionHistory/${id}`;
+        return httpClient(url).then(({ headers, json }) => {
+          return {
+            data: json
+          };
+        });
+      }
 
-      // Define your custom fetch logic for the 'users' resource here
-      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
-        }/submissions/submissionDetails/${id}`;
-      return httpClient(url).then(({ json }) => {
-        console.log({ json });
+      case 'scheme': {
+        const url = `${BASE_URI}/ste/getSchemeSchema/${id}`;
 
+        return httpClient(url).then(({ headers, json }) => {
+          return {
+            data: json,
+          };
+        });
+      }
 
-        return {
-          data: json?.result?.submission,
-        };
-      });
+      default: return dataProvider.getOne(resource, params);
     }
 
-    if (resource === 'transactions') {
-      const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
-        }/ste/transactionHistory/${params.id}`;
-      return httpClient(url).then(({ headers, json }) => {
-        console.log({ headers, json });
 
-        return {
-          data: json
-        };
-      });
-    }
-
-    // // For other resources, use the default implementation
-    return dataProvider.getOne(resource, params);
   },
   update: async (resource: any, params: any) => {
-    console.log("Inside Update", resource, params)
     switch (resource) {
 
       case 'submissions': {
         const flag = params?.data?.status;
 
-        const url = `${import.meta.env.VITE_BACKEND_SERVICE_URL
+        const url = `${BASE_URI
           }/submissions/${params.id}/submitFeedback`;
 
         let feedbackBody = null;
@@ -278,7 +300,7 @@ export const customDataProvider = {
           method: 'POST',
           body: JSON.stringify({ flag, feedbackBody })
         })
-        console.log(res)
+
         if (res?.status == 201) {
           return {
             data: { id: params.id, ...res.json }
@@ -286,6 +308,49 @@ export const customDataProvider = {
         } return res;
       }
 
+    }
+  },
+  create: async (resource: string, params: any) => {
+    switch (resource) {
+      case 'scheme': {
+        return new Promise(async (resolve, reject) => {
+
+          try {
+            if (!params.data.schemeJson) {
+              return reject(
+                new HttpError(
+                  "Please enter a valid JSON Schema",
+                  404,
+                  null
+                )
+              );
+            }
+            const url = `${BASE_URI}/ste/saveSchemeSchema`;
+
+            let res: any = await httpClient(url, {
+              method: 'POST',
+              body: JSON.stringify({
+                schemeName: params.data.schemeName,
+                schemeCode: params.data.schemeCode,
+                schema: JSON.parse(params.data.schemeJson)
+              })
+            });
+
+            resolve({
+              data: { ...res.json }
+            })
+
+          } catch (error: any) {
+            return reject(
+              new HttpError(
+                error.message,
+                404,
+                null
+              )
+            );
+          }
+        });
+      }
     }
   }
   // ... You can override other methods similarly if needed

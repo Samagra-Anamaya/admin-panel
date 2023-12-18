@@ -3,6 +3,7 @@ import villages from "../../pages/villages";
 import submissions from "../../pages/submissions";
 import transactions from "../../pages/transactions";
 import records from "../../pages/records";
+import scheme from "../../pages/scheme";
 
 const MenuOptions: any[] = [
     {
@@ -43,6 +44,15 @@ const MenuOptions: any[] = [
         name: "Records",
         resource: "records",
         props: records,
+
+        icon: "submissionIcon",
+
+        permissions: ["department"]
+    },
+    {
+        name: "Schemes",
+        resource: "scheme",
+        props: scheme,
 
         icon: "submissionIcon",
 

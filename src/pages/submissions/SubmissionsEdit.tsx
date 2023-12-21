@@ -83,7 +83,7 @@ const SubmissionsEdit = () => {
                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick(`plotNumber${el + 1}`)} fontSize="large" />
                         : null}
                 </div>
-                {feedbackState?.[`plotNumber${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for Plot Number ${el + 1}`} source={`feedbackData.plotNumber${el + 1}`} /> : <></>}
+                {feedbackState?.[`plotNumber${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for Plot Number ${el + 1}`} source={`feedback.feedbackData.plotNumber${el + 1}`} /> : <></>}
 
             </>)
         return <></>
@@ -110,7 +110,7 @@ const SubmissionsEdit = () => {
                             : null}
 
                     </div>
-                    {feedbackState?.isAadhaarAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Available" source="feedbackData.isAadhaarAvailable" /> : <></>}
+                    {feedbackState?.isAadhaarAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Available" source="feedback.feedbackData.isAadhaarAvailable" /> : <></>}
 
                     {/*Aadhar Number Input*/}
                     <FunctionField render={(record: any) => {
@@ -131,7 +131,7 @@ const SubmissionsEdit = () => {
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("aadharNumber")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.aadharNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Number" source="feedbackData.aadharNumber" fullWidth /> : <></>}
+                                {feedbackState?.aadharNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Aadhaar Number" source="feedback.feedbackData.aadharNumber" fullWidth /> : <></>}
                             </>
                         }
                     }} />
@@ -144,7 +144,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("landTitleSerialNumber")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.landTitleSerialNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Land Title Serial Number" source="feedbackData.landTitleSerialNumber" /> : <></>}
+                    {feedbackState?.landTitleSerialNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Land Title Serial Number" source="feedback.feedbackData.landTitleSerialNumber" /> : <></>}
 
 
                     {/*Claimant Name*/}
@@ -155,7 +155,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("claimantName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.claimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Claimant Name" source="feedbackData.claimantName" /> : <></>}
+                    {feedbackState?.claimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Claimant Name" source="feedback.feedbackData.claimantName" /> : <></>}
 
 
                     {/*Co Claimant Available */}
@@ -166,7 +166,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantAvailable")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.coClaimantAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Available" source="feedbackData.coClaimantAvailable" /> : <></>}
+                    {feedbackState?.coClaimantAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Available" source="feedback.feedbackData.coClaimantAvailable" /> : <></>}
 
                     <FunctionField render={(record: any) => {
                         if (record?.submissionData?.coClaimantAvailable) {
@@ -178,7 +178,7 @@ const SubmissionsEdit = () => {
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantName")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.coClaimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Name" source="feedbackData.coClaimantName" fullWidth /> : <></>}
+                                {feedbackState?.coClaimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Name" source="feedback.feedbackData.coClaimantName" fullWidth /> : <></>}
                             </>
                         }
                     }} />
@@ -191,7 +191,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("parentName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.parentName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Parent Name" source="feedbackData.parentName" /> : <></>}
+                    {feedbackState?.parentName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Parent Name" source="feedback.feedbackData.parentName" /> : <></>}
 
 
                     <div className={styles.inputContainer}>
@@ -201,7 +201,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("address")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.address || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Address" source="feedbackData.address" /> : <></>}
+                    {feedbackState?.address || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Address" source="feedback.feedbackData.address" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Tribe Name" source={"submissionData.tribeName"} fullWidth />
@@ -210,7 +210,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("tribeName")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.tribeName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Tribe Name" source="feedbackData.tribeName" /> : <></>}
+                    {feedbackState?.tribeName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Tribe Name" source="feedback.feedbackData.tribeName" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Area Units" source={"submissionData.areaUnits"} fullWidth />
@@ -219,7 +219,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("areaUnits")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.areaUnits || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area Units" source="feedbackData.areaUnits" /> : <></>}
+                    {feedbackState?.areaUnits || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area Units" source="feedback.feedbackData.areaUnits" /> : <></>}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Area" source={"submissionData.area"} fullWidth />
@@ -228,7 +228,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("area")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.area || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area" source="feedbackData.area" /> : <></>}
+                    {feedbackState?.area || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Area" source="feedback.feedbackData.area" /> : <></>}
 
 
                     <div className={styles.inputContainer}>
@@ -238,7 +238,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.fraPlotsClaimed || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Plots Claimed" source="feedbackData.fraPlotsClaimed" /> : <></>}
+                    {feedbackState?.fraPlotsClaimed || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Plots Claimed" source="feedback.feedbackData.fraPlotsClaimed" /> : <></>}
 
 
 
@@ -251,7 +251,7 @@ const SubmissionsEdit = () => {
                             : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("rorUpdated")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.rorUpdated || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for ROR Updated" source="feedbackData.rorUpdated" /> : <></>}
+                    {feedbackState?.rorUpdated || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for ROR Updated" source="feedback.feedbackData.rorUpdated" /> : <></>}
 
 
                     <FunctionField render={(record: any) => {
@@ -264,12 +264,12 @@ const SubmissionsEdit = () => {
                                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("khataNumber")} fontSize="large" />
                                         : null}
                                 </div>
-                                {feedbackState?.khataNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Khata Number" source="feedbackData.khataNumber" fullWidth /> : <></>}
+                                {feedbackState?.khataNumber || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Khata Number" source="feedback.feedbackData.khataNumber" fullWidth /> : <></>}
                             </>
                         }
                     }} />
 
-                    <TextInput disabled={flag != TITLE_STATUS.PFA} label="Overall Feedback" source={"feedbackData.feedback"} />
+                    <TextInput disabled={flag != TITLE_STATUS.PFA} label="Overall Feedback" source={"feedback.feedbackData.feedback"} />
 
 
                 </div>
@@ -279,7 +279,7 @@ const SubmissionsEdit = () => {
                     <div className={styles.imagePreviewContainer}>
                         {landImages.map((image: string, index: number) => (
                             <div className={styles.imageContainer}>
-                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setLandViewer)} style={{ borderRadius: '0.5rem' }} />
+                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setLandViewer)} style={{ borderRadius: '0.5rem', cursor: 'pointer' }} />
                             </div>
                         ))}
                         {landViewer && (
@@ -298,7 +298,7 @@ const SubmissionsEdit = () => {
                     <div>
                         <div className={styles.imagePreviewContainer}>
                             {rorImages.map((image: string, index: number) => (
-                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setRoRViewer)} style={{ borderRadius: '0.5rem' }} />
+                                <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setRoRViewer)} style={{ borderRadius: '0.5rem', cursor: 'pointer' }} />
                             ))}
                             {rorViewer && (
                                 <ImageViewer

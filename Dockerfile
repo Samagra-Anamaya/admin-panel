@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 ARG VITE_BACKEND_SERVICE_URL
 ARG VITE_ANAMAYA_APPLICATION_ID

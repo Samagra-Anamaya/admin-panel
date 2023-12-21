@@ -28,7 +28,8 @@ export const getImageFromMinio = async (filename: string) => {
 
     let data = await response.text();
 
-    return data;
+    return data?.includes("http://minio:9000") ? data?.replace("http://minio:9000", import.meta.env.VITE_MINIO_SERVICE_URL) : data;
+
   } catch (err) {
     // Re-throwing the error to the caller
     throw err;

@@ -25,7 +25,7 @@ COPY --from=BUILD_IMAGE /app/dist/ /app/dist/
 COPY package.json .
 COPY vite.config.ts .
 
-RUN npm install typescript
+RUN npm install typescript --legacy-peer-deps
 
 EXPOSE 5175
 

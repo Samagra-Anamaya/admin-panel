@@ -35,6 +35,10 @@ const Login = () => {
         );
     };
 
+    const getAdminType = () => {
+        return applicationId == import.meta.env.VITE_ANAMAYA_APPLICATION_ID ? 'MJJY' : 'STE';
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.loginVector} style={{ backgroundImage: 'url(loginBg.avif)', backgroundSize: 'cover' }}>
@@ -49,7 +53,7 @@ const Login = () => {
                 </div>
             </div>
             <div className={styles.loginContainer} >
-                <Form onSubmit={handleSubmit} noValidate>
+                <Form onSubmit={handleSubmit} noValidate className={styles.loginForm}>
                     <Card className={styles.loginCard} sx={{ borderRadius: 2, padding: '3rem 0rem', background: 'none', boxShadow: 'none' }}>
                         <div className={styles.cardHeader}>
                             Login
@@ -57,12 +61,12 @@ const Login = () => {
                         {!applicationId && <>
                             <div className={styles.adminTypeContainer}>
                                 <h4>Select Admin Type</h4>
-                                <Button variant="contained" sx={{ padding: '0.7em' }} onClick={() => setApplicationId(import.meta.env.VITE_ANAMAYA_APPLICATION_ID)}>Admin 1</Button>
-                                <Button variant="contained" sx={{ padding: '0.7em' }} onClick={() => setApplicationId(import.meta.env.VITE_STE_APPLICATION_ID)}>STE ADMIN</Button>
+                                <Button fullWidth variant="contained" sx={{ padding: '0.7em', borderRadius: '0.25rem' }} onClick={() => setApplicationId(import.meta.env.VITE_ANAMAYA_APPLICATION_ID)}>MJJY</Button>
+                                <Button variant="contained" sx={{ padding: '0.7em', borderRadius: '0.25rem' }} onClick={() => setApplicationId(import.meta.env.VITE_STE_APPLICATION_ID)}>STE</Button>
                             </div>
                         </>}
 
-                        {applicationId && <> <Box>
+                        {applicationId && <> <Box sx={{ width: '100%' }}>
                             <Box sx={{ marginTop: "2em" }}>
                                 <TextField
                                     autoFocus
@@ -98,6 +102,13 @@ const Login = () => {
                                     Login
                                 </Button>
                             </CardActions>
+                            <Button
+                                variant="text"
+                                fullWidth
+                                onClick={() => setApplicationId('')}
+                            >
+                                Not a {getAdminType()} Admin? <br></br>Click here to go back
+                            </Button>
                         </>}
                     </Card>
                 </Form>

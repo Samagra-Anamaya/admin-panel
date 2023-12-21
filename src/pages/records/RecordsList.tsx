@@ -145,7 +145,7 @@ const RecordsListDesktop = () => {
             <TextField source="aadhaar_reference_number" label="Aadhaar Reference Number" />
             <TextField source="unique_beneficiary_id" label="Unique Beneficiary ID" />
             <TextField source="financial_year" label="Financial Year" />
-            <TextField source="in_kind_benefit_detail" label="Benefit Detail In Kind" />
+            <TextField source="in_kind_benefit_detail" label="Benefit Detail" />
             <TextField source="scheme_code" label="Scheme Code" />
             <TextField source="transaction_amount" label="Transaction Amount" />
             <TextField source="transaction_date" label="Transaction Date" />

@@ -293,7 +293,7 @@ export const customDataProvider = {
         let feedbackBody = null;
 
         if (flag == TITLE_STATUS.FLAGGED) {
-          feedbackBody = params?.data?.feedbackData
+          feedbackBody = params?.data?.feedback?.feedbackData
         }
 
         let res = await httpClient(url, {

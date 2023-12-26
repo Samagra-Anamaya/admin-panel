@@ -144,7 +144,7 @@ const GpsListDesktop = () => {
         exporter={exporter}
         actions={<PostListActions />}
     >
-        <Datagrid
+        <DatagridConfigurable
             bulkActionButtons={false}
             rowClick={rowClick}
         >
@@ -165,7 +165,7 @@ const GpsListDesktop = () => {
             <TextField source="spdpVillageId" label="Village ID" />
             <TextField source="villageName" label="Village Name" />
             <TextField source="status" label="Status" />
-        </Datagrid>
+        </DatagridConfigurable>
     </List>
         <style>
             {`

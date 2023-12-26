@@ -1,10 +1,11 @@
 // in src/posts.jsx
 import { Typography } from '@mui/material';
 import { TextField } from '@mui/material'
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Show, SimpleShowLayout, useRecordContext, FunctionField } from 'react-admin';
 import { getImageFromMinio } from '../../utils/getImageFromMinio';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import ImageViewer from 'react-simple-image-viewer';
 import { Carousel } from 'react-responsive-carousel';
 
 import styles from './SubmissionsView.module.css';
@@ -13,6 +14,9 @@ const SubmissionsView = () => {
     let fetchingRorImages = useRef(false);
     const [landImages, setLandImages] = useState<any>([]);
     const [rorImages, setRorImages] = useState<any>([]);
+    const [currentImage, setCurrentImage] = useState(0);
+    const [imageViewer, setImageViewer] = useState(false);
+    const [rorImageViewer, setRorImageViewer] = useState(false);
 
     const getImages = async (arr: Array<string>, setterFunc: Function) => {
         if (arr[0].includes("https")) return;
@@ -39,6 +43,17 @@ const SubmissionsView = () => {
         }
     }, [rorImages])
 
+    const openImageViewer = useCallback((index: string | number, setter: Function) => {
+        setCurrentImage(index);
+        setter(true);
+    }, []);
+
+    const closeImageViewer = useCallback((setter: Function) => {
+        setCurrentImage(0);
+        setter(false);
+    }, []);
+
+
     return <Show >
         <SimpleShowLayout >
             {/* <TextField source="submitterId" label="Submitter ID" />
@@ -61,10 +76,10 @@ const SubmissionsView = () => {
                         <div className={styles.formData}>
                             <p>Form Details</p>
                             <TextField variant='outlined' label="Aadhaar Available?" value={subData.isAadhaarAvailable ? 'Yes' : 'No'} />
-                            {subData?.isAadhaarAvailable ? <TextField variant='outlined' label="Aadhaar Number" value={subData.aadhaar ? 'Yes' : 'No'} /> : <></>}
+                            {subData?.isAadhaarAvailable ? <TextField variant='outlined' label="Aadhaar Number" value={subData.aadharNumber} /> : <></>}
                             <TextField variant='outlined' label="Land Title Serial Number" value={subData.landTitleSerialNumber} />
-                            <Carousel>
-                                {landImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}
+                            <Carousel onClickItem={(index: any) => openImageViewer(index, setImageViewer)}>
+                                {landImages?.map((el: string, index: number) => <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
                             <TextField variant='outlined' label="Claimant Name" value={subData.claimantName} />
                             <TextField variant='outlined' label="Co Claimant Available?" value={subData.coClaimantAvailable ? 'Yes' : 'No'} />
@@ -80,7 +95,7 @@ const SubmissionsView = () => {
                                 [...Array(Number(subData?.fraPlotsClaimed)).keys()].map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
                             }
                             <TextField variant='outlined' label="Has ROR been updated?" value={subData.rorUpdated ? 'Yes' : 'No'} />
-                            <Carousel>
+                            <Carousel onClickItem={(index: any) => openImageViewer(index, setRorImageViewer)}>
                                 {rorImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
                             {subData?.rorUpdated ? <TextField variant='outlined' label="Khata Number" value={subData.khataNumber} /> : <></>}
@@ -95,6 +110,24 @@ const SubmissionsView = () => {
                             <TextField variant='outlined' label="capturedAt" value={new Date(record.capturedAt).toDateString()} />
                             <TextField variant='outlined' label="updatedAt" value={new Date(record.updatedAt).toDateString()} />
                         </div>
+                        {imageViewer && <ImageViewer
+                            src={landImages}
+                            currentIndex={currentImage}
+                            disableScroll={false}
+                            closeOnClickOutside={true}
+                            onClose={() => closeImageViewer(setImageViewer)}
+                            backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
+                            closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
+                        />}
+                        {rorImageViewer && <ImageViewer
+                            src={rorImages}
+                            currentIndex={currentImage}
+                            disableScroll={false}
+                            closeOnClickOutside={true}
+                            onClose={() => closeImageViewer(setRorImageViewer)}
+                            backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
+                            closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
+                        />}
                     </div>
                 }}
             />
@@ -103,24 +136,3 @@ const SubmissionsView = () => {
 };
 
 export default SubmissionsView;
-
-// {
-//     "area": "9999",
-//     "address": "H",
-//     "tribeName": "Birhor",
-//     "parentName": "G",
-//     "rorUpdated": false,
-//     "landRecords": [
-//         "df65a31a-4735-4698-890a-0160897553df.webp",
-//         "df65a31a-4735-4698-890a-0160897553df.webp"
-//     ],
-//     "plotNumber1": "7",
-//     "plotNumber2": "6",
-//     "claimantName": "T",
-//     "imageUploaded": false,
-//     "socialCategory": "FDST",
-//     "fraPlotsClaimed": "2",
-//     "isAadhaarAvailable": false,
-//     "coClaimantAvailable": false,
-//     "landTitleSerialNumber": "Y"
-// }

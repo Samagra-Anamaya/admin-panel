@@ -129,7 +129,7 @@ const GpsListDesktop = () => {
         actions={<PostListActions />}
         filters={Filters}
     >
-        <Datagrid
+        <DatagridConfigurable
             bulkActionButtons={false}
             rowClick={rowClick}
         >
@@ -137,7 +137,7 @@ const GpsListDesktop = () => {
             <TextField source="gpName" label="Gp Name" />
             <TextField source="id" label="ID" />
             <TextField source="villagesUnderGp" label="Villages Under GP" />
-        </Datagrid>
+        </DatagridConfigurable>
     </List>
         <style>
             {`

@@ -106,7 +106,7 @@ const GpsListDesktop = () => {
         actions={<PostListActions />}
     >
 
-        <Datagrid
+        <DatagridConfigurable
             bulkActionButtons={false}
         >
             <FunctionField render={(record: any) => {
@@ -124,7 +124,7 @@ const GpsListDesktop = () => {
                 return <EditButton label={`${record?.status == TITLE_STATUS.PFA ? 'Start' : 'View'} Feedback`} icon={null} />
             }} />
 
-        </Datagrid>
+        </DatagridConfigurable>
     </List >
         <style>
             {`

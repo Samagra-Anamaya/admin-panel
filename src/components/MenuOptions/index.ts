@@ -4,6 +4,8 @@ import submissions from "../../pages/submissions";
 import transactions from "../../pages/transactions";
 import records from "../../pages/records";
 import scheme from "../../pages/scheme";
+import users from "../../pages/users";
+import departments from "../../pages/departments";
 
 const MenuOptions: any[] = [
     {
@@ -57,6 +59,24 @@ const MenuOptions: any[] = [
         icon: "submissionIcon",
 
         permissions: ["department"]
+    },
+    {
+        name: "Users",
+        resource: "users",
+        props: users,
+
+        icon: "submissionIcon",
+
+        permissions: ["super_admin_department"]
+    },
+    {
+        name: "Departments",
+        resource: "departments",
+        props: departments,
+
+        icon: "submissionIcon",
+
+        permissions: ["super_admin_department"]
     },
 ];
 

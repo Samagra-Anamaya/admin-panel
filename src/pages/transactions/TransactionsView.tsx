@@ -52,6 +52,16 @@ const QuickFilter = (props: any) => {
     return <Chip label={translate(props.label)} />
 };
 
+
+const generateErrors: any = (errors: any, arr: Array<any>) => {
+    Object?.keys(errors)?.map((t) => {
+        if (typeof errors[t] == 'string') {
+            arr.push({ field: t, value: errors[t] })
+        } else generateErrors(errors[t], arr)
+    })
+    return arr;
+}
+
 const DataPanel = () => {
     const record = useRecordContext();
     return (
@@ -67,10 +77,10 @@ const DataPanel = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.keys(record?.errors)?.map((t, j) => {
-                                return <StyledTableRow key={j}>
-                                    <StyledTableCell align='left'>{t} </StyledTableCell>
-                                    <StyledTableCell align="left"><span style={{ color: '#C60200' }}>{record?.errors?.[t] || ""}</span></StyledTableCell>
+                            {Object?.keys(record?.errors)?.length && generateErrors(record.errors, []).map((el) => {
+                                return <StyledTableRow key={el.field}>
+                                    <StyledTableCell align='left'>{el.field} </StyledTableCell>
+                                    <StyledTableCell align="left"><span style={{ color: '#C60200' }}>{el.value || ""}</span></StyledTableCell>
                                 </StyledTableRow>
                             })}
                         </TableBody>

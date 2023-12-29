@@ -12,7 +12,7 @@ export const store = localStorageStore(undefined, 'stride');
 const App = () => {
 
   const ri = setInterval(() => {
-    if (location.href.includes('gps') || location.href.includes('transactions')) {
+    if (location.href.includes('gps') || location.href.includes('transactions') || location.href.includes('users')) {
       let reloaded = store.getItem("reload");
       if (!reloaded) {
         store.setItem('reload', true)

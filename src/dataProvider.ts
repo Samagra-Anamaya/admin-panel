@@ -2,8 +2,10 @@ import simpleRestProvider from "ra-data-simple-rest";
 import { HttpError, Resource, fetchUtils } from "react-admin";
 import { map } from 'lodash';
 import { TITLE_STATUS } from "./enums/Status";
+import { store } from "./App";
 
 const BASE_URI = import.meta.env.VITE_BACKEND_SERVICE_URL;
+const USER_SERVICE_URI = import.meta.env.VITE_USER_SERVICE_URL;
 
 const httpClient = (url: any, options: any = {}) => {
   console.log({ url, options });
@@ -11,7 +13,8 @@ const httpClient = (url: any, options: any = {}) => {
     options.headers = new Headers({ Accept: "application/json" });
   }
   const token = localStorage.getItem("token");
-  options.headers.set("Authorization", `Bearer ${token}`);
+  if (!options?.headers.get('x-application-id'))
+    options.headers.set("Authorization", `Bearer ${token}`);
   return fetchUtils.fetchJson(url, options);
 };
 
@@ -239,6 +242,36 @@ export const customDataProvider = {
         };
       });
     }
+
+
+    if (resource === 'departments') {
+      const { page, perPage } = params.pagination;
+
+      // Define your custom fetch logic for the 'users' resource here
+      const url = `${BASE_URI}/ste/department?page=${page}&limit=${perPage}`;
+      return httpClient(url).then(({ headers, json }) => {
+        console.log({ headers, json });
+
+        return {
+          data: json?.result?.data,
+          total: json?.result?.totalCount,
+        };
+      });
+    }
+
+    if (resource === 'users') {
+      const { page, perPage } = params.pagination;
+
+      // Define your custom fetch logic for the 'users' resource here
+      const url = `${USER_SERVICE_URI}/searchUserByQuery?startRow=${page}&numberOfResults=${perPage}&queryString=(registrations.roles:department)`;
+      return httpClient(url, { headers: new Headers({ Accept: "application/json", 'x-application-id': import.meta.env.VITE_STE_APPLICATION_ID }) }).then(({ headers, json }) => {
+
+        return {
+          data: json?.result?.users,
+          total: json?.result?.total,
+        };
+      });
+    }
     // For other resources, use the default implementation
     return dataProvider.getList(resource, params);
   },
@@ -272,6 +305,26 @@ export const customDataProvider = {
         return httpClient(url).then(({ headers, json }) => {
           return {
             data: json,
+          };
+        });
+      }
+
+      case 'departments': {
+        const url = `${BASE_URI}/ste/department/${id}`;
+
+        return httpClient(url).then(({ headers, json }) => {
+          return {
+            data: json,
+          };
+        });
+      }
+
+      case 'users': {
+        const url = `${USER_SERVICE_URI}/user/${id}`;
+
+        return httpClient(url, { headers: new Headers({ Accept: "application/json", 'x-application-id': import.meta.env.VITE_STE_APPLICATION_ID }) }).then(({ headers, json }) => {
+          return {
+            data: json?.result?.users?.[0],
           };
         });
       }
@@ -325,14 +378,19 @@ export const customDataProvider = {
                 )
               );
             }
+
             const url = `${BASE_URI}/ste/saveSchemeSchema`;
 
+            const user: any = JSON.parse(localStorage.getItem('user') || '{}');
+
+            console.log(user)
             let res: any = await httpClient(url, {
               method: 'POST',
               body: JSON.stringify({
                 schemeName: params.data.schemeName,
                 schemeCode: params.data.schemeCode,
-                schema: JSON.parse(params.data.schemeJson)
+                schema: JSON.parse(params.data.schemeJson),
+                deptId: user?.user?.data?.deptId
               })
             });
 
@@ -344,6 +402,109 @@ export const customDataProvider = {
             return reject(
               new HttpError(
                 error.message,
+                404,
+                null
+              )
+            );
+          }
+        });
+      }
+
+      case 'departments': {
+        return new Promise(async (resolve, reject) => {
+
+          try {
+            const url = `${BASE_URI}/ste/department`;
+
+            // if (params.data.schemeJson) {
+            //   if (!Array.isArray(JSON.parse(params.data.schemeJson))) {
+            //     return reject(
+            //       new HttpError(
+            //         "Schemes Json must be an array of objects",
+            //         404,
+            //         null
+            //       )
+            //     );
+            //   }
+            // }
+
+            let res: any = await httpClient(url, {
+              method: 'POST',
+              body: JSON.stringify({
+                name: params.data.name,
+                data: params.data.deptData ? JSON.parse(params.data.deptData) : {},
+                // schemes: params.data.schemeJson ? JSON.parse(params.data.schemeJson) : []
+                schemes: []
+              })
+            });
+
+            console.log({ res })
+
+            if (res?.json?.[0]?.statuscode == 500) {
+              return reject(
+                new HttpError(
+                  res?.json?.[0]?.errors[0].message,
+                  404,
+                  null
+                )
+              );
+            }
+
+            resolve({
+              data: { ...res.json?.result?.data }
+            })
+
+          } catch (error: any) {
+            return reject(
+              new HttpError(
+                error.message,
+                404,
+                null
+              )
+            );
+          }
+        });
+      }
+
+      case 'users': {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const url = `${USER_SERVICE_URI}/signup`;
+
+            const regBody = {
+              registration: {
+                applicationId: import.meta.env.VITE_STE_APPLICATION_ID,
+                roles: ['department'],
+                usernameStatus: 'ACTIVE'
+              },
+              user: {
+                username: params.data.username,
+                password: params.data.password,
+                data: {
+                  deptId: params.data.deptId
+                }
+              }
+            }
+
+            let res: any = await httpClient(url, {
+              method: 'POST',
+              body: JSON.stringify(regBody),
+              headers: new Headers({ Accept: "application/json", 'x-application-id': import.meta.env.VITE_STE_APPLICATION_ID })
+            });
+
+            resolve({
+              data: { ...res?.json?.result }
+            })
+
+          } catch (error: any) {
+            const errorStrings: String[] = [];
+            const errors = error?.body?.exception?.fieldErrors;
+            Object.keys(errors).forEach(key => {
+              errorStrings.push(errors[key]?.[0]?.message);
+            })
+            return reject(
+              new HttpError(
+                errorStrings.join("") || "Bad Request, please try again",
                 404,
                 null
               )

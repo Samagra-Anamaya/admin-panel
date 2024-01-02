@@ -89,6 +89,23 @@ const SubmissionsEdit = () => {
         return <></>
     }
 
+    const nameInputs = (fieldNo: string, field: string, text: string) => {
+        if (subData?.[fieldNo])
+            //@ts-ignore
+            return [...Array(Number(subData?.[fieldNo])).keys()].map(el => <>
+                <div className={styles.inputContainer}>
+                    <TextInput disabled label={`${text} ${el + 1} Name`} source={`submissionData.${field}${el + 1}`} fullWidth />
+                    {flag == TITLE_STATUS.PFA ? feedbackState?.[`${field}${el + 1}`] ?
+                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick(`${field}${el + 1}`)} />
+                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick(`${field}${el + 1}`)} fontSize="large" />
+                        : null}
+                </div>
+                {feedbackState?.[`${field}${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for ${text} ${el + 1}`} source={`feedback.feedbackData.${field}${el + 1}`} /> : <></>}
+
+            </>)
+        return <></>
+    }
+
     const handleFeedbackClick = (source: string) => {
         setFeedbackState((prevState: any) => ({ ...prevState, [source]: prevState?.[source] ? false : true }))
     }
@@ -158,31 +175,27 @@ const SubmissionsEdit = () => {
                     {feedbackState?.claimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Claimant Name" source="feedback.feedbackData.claimantName" /> : <></>}
 
 
-                    {/*Co Claimant Available */}
                     <div className={styles.inputContainer}>
-                        <BooleanInput disabled label="Co Claimant Available?" source={"submissionData.coClaimantAvailable"} />
-                        {flag == TITLE_STATUS.PFA ? feedbackState?.coClaimantAvailable ?
-                            <CancelIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("coClaimantAvailable")} />
-                            : <AddCommentIcon sx={{ marginTop: '0.25rem !important' }} className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantAvailable")} fontSize="large" />
+                        <TextInput disabled label="No. of Co Claimants Available" source={"submissionData.noOfCoClaimants"} fullWidth />
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.noOfCoClaimants ?
+                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("noOfCoClaimants")} />
+                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("noOfCoClaimants")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.coClaimantAvailable || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Available" source="feedback.feedbackData.coClaimantAvailable" /> : <></>}
+                    {feedbackState?.noOfCoClaimants || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for No of Co Claimants" source="feedback.feedbackData.noOfCoClaimants" /> : <></>}
 
-                    <FunctionField render={(record: any) => {
-                        if (record?.submissionData?.coClaimantAvailable) {
-                            return <>
-                                <div className={styles.inputContainer}>
-                                    <TextInput disabled label="Co Claimant Name" source="submissionData.coClaimantName" fullWidth />
-                                    {flag == TITLE_STATUS.PFA ? feedbackState?.coClaimantName ?
-                                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("coClaimantName")} />
-                                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("coClaimantName")} fontSize="large" />
-                                        : null}
-                                </div>
-                                {feedbackState?.coClaimantName || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Co Claimant Name" source="feedback.feedbackData.coClaimantName" fullWidth /> : <></>}
-                            </>
-                        }
-                    }} />
+                    {nameInputs('noOfCoClaimants', 'coClaimant', 'Co Claimant')}
 
+                    <div className={styles.inputContainer}>
+                        <TextInput disabled label="No. of Dependents Available" source={"submissionData.noOfDependents"} fullWidth />
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.noOfDependents ?
+                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("noOfDependents")} />
+                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("noOfDependents")} fontSize="large" />
+                            : null}
+                    </div>
+                    {feedbackState?.noOfDependents || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for No of Dependents" source="feedback.feedbackData.noOfDependents" /> : <></>}
+
+                    {nameInputs('noOfDependents', 'dependent', 'Dependent')}
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Parent Name" source={"submissionData.parentName"} fullWidth />

@@ -82,8 +82,16 @@ const SubmissionsView = () => {
                                 {landImages?.map((el: string, index: number) => <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
                             <TextField variant='outlined' label="Claimant Name" value={subData.claimantName} />
-                            <TextField variant='outlined' label="Co Claimant Available?" value={subData.coClaimantAvailable ? 'Yes' : 'No'} />
-                            {subData?.coClaimantAvailable ? <TextField variant='outlined' label="Co Claimant Name?" value={subData.coClaimantName} /> : <></>}
+                            <TextField variant='outlined' label="No. of Co Claimants Available" value={subData.noOfCoClaimants} />
+                            {
+                                //@ts-ignore
+                                [...Array(Number(subData?.noOfCoClaimants)).keys()].map(el => <TextField variant='outlined' label={`Co Claimant ${el + 1} Name`} value={subData[`coClaimant${el + 1}`]} />)
+                            }
+                            <TextField variant='outlined' label="No. of Dependents Available" value={subData.noOfDependents} />
+                            {
+                                //@ts-ignore
+                                [...Array(Number(subData?.noOfDependents)).keys()].map(el => <TextField variant='outlined' label={`Dependant ${el + 1} Name`} value={subData[`dependent${el + 1}`]} />)
+                            }
                             <TextField variant='outlined' label="Parent Name" value={subData.parentName} />
                             <TextField variant='outlined' label="Full Address" value={subData.address} />
                             <TextField variant='outlined' label="Tribe Name" value={subData.tribeName} />

@@ -82,15 +82,15 @@ const SubmissionsView = () => {
                                 {landImages?.map((el: string, index: number) => <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
                             <TextField variant='outlined' label="Claimant Name" value={subData.claimantName} />
-                            <TextField variant='outlined' label="No. of Co Claimants Available" value={subData.noOfCoClaimants} />
+                            {subData?.noOfCoClaimants ? <TextField variant='outlined' label="No. of Co Claimants Available" value={subData.noOfCoClaimants} /> : <></>}
                             {
                                 //@ts-ignore
-                                [...Array(Number(subData?.noOfCoClaimants)).keys()].map(el => <TextField variant='outlined' label={`Co Claimant ${el + 1} Name`} value={subData[`coClaimant${el + 1}`]} />)
+                                [...Array(Number(subData?.noOfCoClaimants || 0))?.keys()]?.map(el => <TextField variant='outlined' label={`Co Claimant ${el + 1} Name`} value={subData[`coClaimant${el + 1}`]} />)
                             }
-                            <TextField variant='outlined' label="No. of Dependents Available" value={subData.noOfDependents} />
+                            {subData?.noOfDependents ? <TextField variant='outlined' label="No. of Dependents Available" value={subData.noOfDependents} /> : <></>}
                             {
                                 //@ts-ignore
-                                [...Array(Number(subData?.noOfDependents)).keys()].map(el => <TextField variant='outlined' label={`Dependant ${el + 1} Name`} value={subData[`dependent${el + 1}`]} />)
+                                [...Array(Number(subData?.noOfDependents || 0))?.keys()]?.map(el => <TextField variant='outlined' label={`Dependant ${el + 1} Name`} value={subData[`dependent${el + 1}`]} />)
                             }
                             <TextField variant='outlined' label="Parent Name" value={subData.parentName} />
                             <TextField variant='outlined' label="Full Address" value={subData.address} />
@@ -100,7 +100,7 @@ const SubmissionsView = () => {
                             <TextField variant='outlined' label="No. of Plots Claimed Under FRA" value={subData.fraPlotsClaimed} />
                             {
                                 //@ts-ignore
-                                [...Array(Number(subData?.fraPlotsClaimed)).keys()].map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
+                                [...Array(Number(subData?.fraPlotsClaimed))?.keys()]?.map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
                             }
                             <TextField variant='outlined' label="Has ROR been updated?" value={subData.rorUpdated ? 'Yes' : 'No'} />
                             <Carousel onClickItem={(index: any) => openImageViewer(index, setRorImageViewer)}>

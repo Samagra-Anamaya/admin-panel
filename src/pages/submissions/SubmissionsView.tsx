@@ -97,11 +97,18 @@ const SubmissionsView = () => {
                             <TextField variant='outlined' label="Tribe Name" value={subData.tribeName} />
                             <TextField variant='outlined' label="Area Units" value={subData.areaUnits} />
                             <TextField variant='outlined' label="Area in Hectares (xx.xx)" value={subData.area} />
-                            <TextField variant='outlined' label="No. of Plots Claimed Under FRA" value={subData.fraPlotsClaimed} />
-                            {
-                                //@ts-ignore
-                                [...Array(Number(subData?.fraPlotsClaimed))?.keys()]?.map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
-                            }
+                            <TextField variant='outlined' label="Description of boundaries by prominent landmarks including khasra/compartment No" value={subData.boundariesDesc} />
+                            <TextField variant='outlined' label="Type of Forest Land" value={subData.forestLandType} />
+                            {subData?.forestLandType == 'revenueForest' && <TextField variant='outlined' label="Type of Block" value={subData.typeOfBlock} />}
+                            {subData?.forestLandType == 'revenueForest' && subData?.typeOfBlock == 'jungleBlock' && <TextField variant='outlined' label="Compartment No" value={subData.compartmentNo} />}
+                            {subData?.forestLandType == 'revenueForest' && subData?.typeOfBlock == 'revenueBlock' && <>
+                                <TextField variant='outlined' label="No. of Plots Claimed Under FRA" value={subData.fraPlotsClaimed} />
+                                {
+                                    //@ts-ignore
+                                    [...Array(Number(subData?.fraPlotsClaimed))?.keys()]?.map(el => <TextField variant='outlined' label={`Plot Number ${el + 1}`} value={subData[`plotNumber${el + 1}`]} />)
+                                }
+                            </>}
+                            {subData?.forestLandType == 'reservedForest' && <TextField variant='outlined' label="Compartment No" value={subData.compartmentNo} />}
                             <TextField variant='outlined' label="Has ROR been updated?" value={subData.rorUpdated ? 'Yes' : 'No'} />
                             <Carousel onClickItem={(index: any) => openImageViewer(index, setRorImageViewer)}>
                                 {rorImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}

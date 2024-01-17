@@ -83,7 +83,7 @@ const SubmissionsEdit = () => {
                         : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick(`plotNumber${el + 1}`)} fontSize="large" />
                         : null}
                 </div>
-                {feedbackState?.[`plotNumber${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for Plot Number ${el + 1}`} source={`feedback.feedbackData.plotNumber${el + 1}`} /> : <></>}
+                {feedbackState?.[`plotNumber${el + 1}`] || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label={`Feedback for Plot Number ${el + 1}`} source={`feedback.feedbackData.plotNumber${el + 1}`} fullWidth /> : <></>}
 
             </>)
         return <></>
@@ -245,17 +245,86 @@ const SubmissionsEdit = () => {
 
 
                     <div className={styles.inputContainer}>
-                        <TextInput disabled label="No. of Plots Claimed Under FRA" source={"submissionData.fraPlotsClaimed"} fullWidth />
-                        {flag == TITLE_STATUS.PFA ? feedbackState?.fraPlotsClaimed ?
-                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} />
-                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} fontSize="large" />
+                        <TextInput disabled label="Description of boundaries by prominent landmarks including khasra/compartment No" source={"submissionData.boundariesDesc"} fullWidth />
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.boundariesDesc ?
+                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("boundariesDesc")} />
+                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("boundariesDesc")} fontSize="large" />
                             : null}
                     </div>
-                    {feedbackState?.fraPlotsClaimed || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Plots Claimed" source="feedback.feedbackData.fraPlotsClaimed" /> : <></>}
+                    {feedbackState?.boundariesDesc || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Description of boundaries by prominent landmarks including khasra/compartment No" source="feedback.feedbackData.boundariesDesc" /> : <></>}
 
 
+                    <div className={styles.inputContainer}>
+                        <TextInput disabled label="Type of Forest Land" source={"submissionData.forestLandType"} fullWidth />
+                        {flag == TITLE_STATUS.PFA ? feedbackState?.forestLandType ?
+                            <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("forestLandType")} />
+                            : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("forestLandType")} fontSize="large" />
+                            : null}
+                    </div>
+                    {feedbackState?.forestLandType || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Type of Forest Land" source="feedback.feedbackData.forestLandType" /> : <></>}
 
-                    {PlotInputs()}
+                    <FunctionField render={(record: any) => {
+                        if (record?.submissionData?.forestLandType == 'revenueForest') {
+                            return <>
+                                <div className={styles.inputContainer}>
+                                    <TextInput disabled label="Type of Block" source="submissionData.typeOfBlock" fullWidth />
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.typeOfBlock ?
+                                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("typeOfBlock")} />
+                                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("typeOfBlock")} fontSize="large" />
+                                        : null}
+                                </div>
+                                {feedbackState?.typeOfBlock || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Type of Block" source="feedback.feedbackData.typeOfBlock" fullWidth /> : <></>}
+                            </>
+                        }
+                    }} />
+
+                    <FunctionField render={(record: any) => {
+                        if (record?.submissionData?.forestLandType == 'revenueForest' && record?.submissionData?.typeOfBlock == 'jungleBlock') {
+                            return <>
+                                <div className={styles.inputContainer}>
+                                    <TextInput disabled label="Compartment No" source="submissionData.compartmentNo" fullWidth />
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.compartmentNo ?
+                                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("compartmentNo")} />
+                                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("compartmentNo")} fontSize="large" />
+                                        : null}
+                                </div>
+                                {feedbackState?.compartmentNo || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Compartment No" source="feedback.feedbackData.compartmentNo" fullWidth /> : <></>}
+                            </>
+                        }
+                    }} />
+
+                    <FunctionField render={(record: any) => {
+                        if (record?.submissionData?.forestLandType == 'revenueForest' && record?.submissionData?.typeOfBlock == 'revenueBlock') {
+                            return <>
+                                <div className={styles.inputContainer}>
+                                    <TextInput disabled label="No. of Plots Claimed Under FRA" source={"submissionData.fraPlotsClaimed"} fullWidth />
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.fraPlotsClaimed ?
+                                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} />
+                                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("fraPlotsClaimed")} fontSize="large" />
+                                        : null}
+                                </div>
+                                {feedbackState?.fraPlotsClaimed || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Plots Claimed" source="feedback.feedbackData.fraPlotsClaimed" fullWidth /> : <></>}
+
+                                {PlotInputs()}
+                            </>
+                        }
+                    }} />
+
+                    <FunctionField render={(record: any) => {
+                        if (record?.submissionData?.forestLandType == 'reservedForest') {
+                            return <>
+                                <div className={styles.inputContainer}>
+                                    <TextInput disabled label="Compartment No" source="submissionData.compartmentNo" fullWidth />
+                                    {flag == TITLE_STATUS.PFA ? feedbackState?.compartmentNo ?
+                                        <CancelIcon className={styles.iconStyle} fontSize="large" color="error" onClick={() => handleFeedbackClick("compartmentNo")} />
+                                        : <AddCommentIcon className={styles.iconStyle} color="error" onClick={() => handleFeedbackClick("compartmentNo")} fontSize="large" />
+                                        : null}
+                                </div>
+                                {feedbackState?.compartmentNo || flag != TITLE_STATUS.PFA ? <TextInput disabled={flag != TITLE_STATUS.PFA} required label="Feedback for Compartment No" source="feedback.feedbackData.compartmentNo" fullWidth /> : <></>}
+                            </>
+                        }
+                    }} />
+
 
                     <div className={styles.inputContainer}>
                         <TextInput disabled label="Has ROR been updated?" source={"submissionData.rorUpdated"} fullWidth />

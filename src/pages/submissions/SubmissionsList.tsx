@@ -95,8 +95,10 @@ const GpsListDesktop = () => {
     const location = useLocation();
 
     const Filters = [
-        <TextInput label="villageId" source="spdpVillageId" />,
-        <SelectInput label="Status" source="status" choices={[TITLE_STATUS.APPROVED, TITLE_STATUS.FLAGGED, TITLE_STATUS.PFA, TITLE_STATUS.REJECTED].map(el => ({ id: el, name: el }))} />
+        <TextInput label="Village Id" source="spdpVillageId" />,
+        <SelectInput label="Status" source="status" choices={[TITLE_STATUS.APPROVED, TITLE_STATUS.FLAGGED, TITLE_STATUS.PFA, TITLE_STATUS.REJECTED].map(el => ({ id: el, name: el }))} />,
+        <TextInput label="Submitter Id" source="submitterId" />,
+        <TextInput label="Created At" source="createdAt" />,
     ]
 
     return <><List

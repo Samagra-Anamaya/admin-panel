@@ -79,10 +79,21 @@ export const customDataProvider = {
         if (params?.filter?.spdpVillageId)
           url = url + `/${params?.filter?.spdpVillageId}`;
 
-        if (params?.filter?.status) {
-          url = url + `?status=${params?.filter.status}&page=${page}&limit=${perPage}`;
+        url = url + "?";
+
+        if (params?.filter?.status || params?.filter?.submitterId || params?.filter?.createdAt) {
+          if(params?.filter?.status){
+          url = url + `status=${params?.filter.status}`;
+          }
+          if(params?.filter?.submitterId){
+            url = params?.filter?.status ? url + `&submitter=${params?.filter.submitterId}` : url + `submitter=${params?.filter.submitterId}`;
+          }
+          if(params?.filter?.createdAt){
+            url = (params?.filter?.status || params?.filter?.submitterId) ? url + `&createdAt=${params?.filter.createdAt}` : url + `createdAt=${params?.filter.createdAt}`;
+          }
+          url = url + `&page=${page}&limit=${perPage}`;
         } else {
-          url = url + `?page=${page}&limit=${perPage}`;
+          url = url + `page=${page}&limit=${perPage}`;
         }
 
         url = url + `&sortBy=${params?.sort?.field}&order=${params?.sort?.order?.toLowerCase()}`;

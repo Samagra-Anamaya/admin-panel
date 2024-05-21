@@ -10,6 +10,14 @@ import Icon from '@mui/material/Icon';
 import { ThemeName, themes } from "../../themes/themes";
 import { TITLE_STATUS } from "../../enums/Status";
 
+import { Worker } from '@react-pdf-viewer/core';
+import { Viewer } from '@react-pdf-viewer/core';
+
+// Import the styles
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import CommonModal from '../../components/Modal';
+
+
 const disabled = (record: any) => {
     if (record?.status == TITLE_STATUS.PFA) return false;
     return true;
@@ -33,6 +41,9 @@ const SubmissionsEdit = () => {
     const [landViewer, setLandViewer] = useState(false);
     const [rorViewer, setRoRViewer] = useState(false);
     const [theme, setTheme] = useTheme();
+    const [currentPdf, setCurrentPdf] = useState<any>(null);
+    const [pdfModal, showPdfModal] = useState<boolean>(false);
+
     console.log({ theme })
     let fetchingLandImages = React.useRef(false);
     let fetchingRorImages = useRef(false);
@@ -108,6 +119,11 @@ const SubmissionsEdit = () => {
 
     const handleFeedbackClick = (source: string) => {
         setFeedbackState((prevState: any) => ({ ...prevState, [source]: prevState?.[source] ? false : true }))
+    }
+
+    const handlePdfSelection = (el: any) => {
+        setCurrentPdf(el);
+        showPdfModal(true);
     }
 
     return <Edit mutationMode="pessimistic">
@@ -379,9 +395,13 @@ const SubmissionsEdit = () => {
                     <h3 style={{ opacity: 0.8, margin: '1rem 0rem' }}>ROR Records</h3>
                     <div>
                         <div className={styles.imagePreviewContainer}>
-                            {rorImages.map((image: string, index: number) => (
+                            {rorImages.map((image: string, index: number) => image?.includes('pdf') ? <div className={styles.pdfView} onClick={() => handlePdfSelection(image)}>
+                                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                    <Viewer defaultScale={0.2} fileUrl={image} />
+                                </Worker>
+                            </div> :
                                 <img src={image} alt="" width="150" onClick={() => openImageViewer(index, setRoRViewer)} style={{ borderRadius: '0.5rem', cursor: 'pointer' }} />
-                            ))}
+                            )}
                             {rorViewer && (
                                 <ImageViewer
                                     src={rorImages}
@@ -397,6 +417,12 @@ const SubmissionsEdit = () => {
                     </div>
                 </div>
             </div>
+            {pdfModal && <CommonModal sx={{ height: '100vh', maxWidth: '100vw', margin: 0, padding: 0 }}>
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                    <Viewer fileUrl={currentPdf} />
+                </Worker>
+                <div className={styles.goBackBtn} onClick={() => { setCurrentPdf(null); showPdfModal(false); }}>Go Back</div>
+            </CommonModal>}
         </SimpleForm>
     </Edit >
 };

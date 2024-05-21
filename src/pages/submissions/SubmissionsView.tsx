@@ -7,8 +7,16 @@ import { getImageFromMinio } from '../../utils/getImageFromMinio';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import ImageViewer from 'react-simple-image-viewer';
 import { Carousel } from 'react-responsive-carousel';
-
 import styles from './SubmissionsView.module.css';
+
+
+import { Worker } from '@react-pdf-viewer/core';
+import { Viewer } from '@react-pdf-viewer/core';
+
+// Import the styles
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import CommonModal from '../../components/Modal';
+
 const SubmissionsView = () => {
     let fetchingLandImages = useRef(false);
     let fetchingRorImages = useRef(false);
@@ -17,6 +25,8 @@ const SubmissionsView = () => {
     const [currentImage, setCurrentImage] = useState(0);
     const [imageViewer, setImageViewer] = useState(false);
     const [rorImageViewer, setRorImageViewer] = useState(false);
+    const [currentPdf, setCurrentPdf] = useState<any>(null);
+    const [pdfModal, showPdfModal] = useState<boolean>(false);
 
     const getImages = async (arr: Array<string>, setterFunc: Function) => {
         if (arr[0].includes("https")) return;
@@ -53,6 +63,10 @@ const SubmissionsView = () => {
         setter(false);
     }, []);
 
+    const handlePdfSelection = (el: any) => {
+        setCurrentPdf(el);
+        showPdfModal(true);
+    }
 
     return <Show >
         <SimpleShowLayout >
@@ -110,9 +124,17 @@ const SubmissionsView = () => {
                             </>}
                             {subData?.forestLandType == 'reservedForest' && <TextField variant='outlined' label="Compartment No" value={subData.compartmentNo} />}
                             <TextField variant='outlined' label="Has ROR been updated?" value={subData.rorUpdated ? 'Yes' : 'No'} />
+                            <h4>ROR Records Images</h4>
                             <Carousel onClickItem={(index: any) => openImageViewer(index, setRorImageViewer)}>
-                                {rorImages?.map((el: string) => <img src={el} style={{ width: '30%' }} />)}
+                                {rorImages?.map((el: string) => el?.includes('pdf') ? <></>
+                                    : <img src={el} style={{ width: '30%' }} />)}
                             </Carousel>
+                            <h4>ROR Records Pdf</h4>
+                            {rorImages?.map((el: string) => el?.includes('pdf') ? <div className={styles.pdfView} onClick={() => handlePdfSelection(el)}>
+                                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                    <Viewer defaultScale={0.2} fileUrl={el} />
+                                </Worker>
+                            </div> : null)}
                             {subData?.rorUpdated ? <TextField variant='outlined' label="Khata Number" value={subData.khataNumber} /> : <></>}
                         </div>
                         <div className={styles.subData}>
@@ -125,25 +147,36 @@ const SubmissionsView = () => {
                             <TextField variant='outlined' label="capturedAt" value={new Date(record.capturedAt).toDateString()} />
                             <TextField variant='outlined' label="updatedAt" value={new Date(record.updatedAt).toDateString()} />
                         </div>
-                        {imageViewer && <ImageViewer
-                            src={landImages}
-                            currentIndex={currentImage}
-                            disableScroll={false}
-                            closeOnClickOutside={true}
-                            onClose={() => closeImageViewer(setImageViewer)}
-                            backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
-                            closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
-                        />}
-                        {rorImageViewer && <ImageViewer
-                            src={rorImages}
-                            currentIndex={currentImage}
-                            disableScroll={false}
-                            closeOnClickOutside={true}
-                            onClose={() => closeImageViewer(setRorImageViewer)}
-                            backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
-                            closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
-                        />}
+                        {
+                            imageViewer && <ImageViewer
+                                src={landImages}
+                                currentIndex={currentImage}
+                                disableScroll={false}
+                                closeOnClickOutside={true}
+                                onClose={() => closeImageViewer(setImageViewer)}
+                                backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
+                                closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
+                            />
+                        }
+                        {
+                            rorImageViewer && <ImageViewer
+                                src={rorImages}
+                                currentIndex={currentImage}
+                                disableScroll={false}
+                                closeOnClickOutside={true}
+                                onClose={() => closeImageViewer(setRorImageViewer)}
+                                backgroundStyle={{ position: 'fixed', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(2px)' }}
+                                closeComponent={<p style={{ fontSize: '3rem', color: '#fff', paddingRight: '3rem', paddingTop: '3rem' }}>X</p>}
+                            />
+                        }
+                        {pdfModal && <CommonModal sx={{ height: '100vh', maxWidth: '100vw', margin: 0, padding: 0 }}>
+                            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                <Viewer fileUrl={currentPdf} />
+                            </Worker>
+                            <div className={styles.goBackBtn} onClick={() => { setCurrentPdf(null); showPdfModal(false); }}>Go Back</div>
+                        </CommonModal>}
                     </div>
+
                 }}
             />
         </SimpleShowLayout>

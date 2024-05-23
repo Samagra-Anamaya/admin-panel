@@ -57,3 +57,27 @@
         cursor: pointer;
     }
 }
+
+.pdfView {
+    width: 12vw;
+    height: 25vh;
+    cursor: pointer;
+}
+
+.goBackBtn {
+    position: absolute;
+    bottom: 10px;
+    padding: 1rem 0rem;
+    width: 40vw;
+    text-align: center;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    color: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.05);
+}
